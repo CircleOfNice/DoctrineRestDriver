@@ -40,9 +40,10 @@ doctrine:
         password: "%database_password%"
         charset:  UTF8
         options:
-            authenticator_class:  "HttpAuthentication"
-            CURLOPT_MAXREDIRS:  25
-            CURLOPT_HTTPHEADER: "Content-Type: application/json"
+            authenticator_class: "HttpAuthentication"
+            routes:              "%kernel.root_dir%/config/rest_driver_routing.yml"
+            CURLOPT_MAXREDIRS:   25
+            CURLOPT_HTTPHEADER:  "Content-Type: application/json"
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"

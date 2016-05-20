@@ -52,6 +52,7 @@ doctrine:
     password:     "%default_api_password%"
     options:
       authentication_class:  "HttpAuthentication" | "YourOwnNamespaceName" | if not specified no authentication will be used
+      routes:                "%kernel.root_dir%/config/rest_driver_routing.yml"
 ```
 
 Additionally you can add CURL-specific options:
@@ -66,6 +67,7 @@ doctrine:
     password:     "%default_api_password%"
     options:
       authentication_class:           "HttpAuthentication"
+      routes:                         "%kernel.root_dir%/config/rest_driver_routing.yml"
       CURLOPT_CURLOPT_FOLLOWLOCATION: true
       CURLOPT_HEADER:                 true
 ```
@@ -248,6 +250,25 @@ class UserController extends Controller {
     }
 }
 ```
+
+## Specific routes for specific methods
+
+Many REST APIs don't follow these conventions. Twitter, for example, uses different routes for several methods of the same entity:
+```
+POST friendships/create
+GET  friendships/show
+```
+
+To use these APIs, too, you can adapt the ```rest_driver_routing.yml``` file, referenced in your driver config.
+
+```
+routes:
+    products:
+        post: "friendships/create"
+        get:  "friendships/show"
+```
+
+*Important: These routes will only be used if the @table annotation is equal to the second node (in our example the second node is "products")!*
 
 #Examples
 

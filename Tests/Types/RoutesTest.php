@@ -18,18 +18,20 @@
 
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
-use Circle\DoctrineRestDriver\Types\Url;
+use Circle\DoctrineRestDriver\Types\Payload;
+use Circle\DoctrineRestDriver\Types\Routes;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPSQLParser\PHPSQLParser;
 
 /**
- * Tests the url type
+ * Tests the routes type
  *
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Url
+ * @coversDefaultClass Circle\DoctrineRestDriver\Types\Routes
  */
-class UrlTest extends \PHPUnit_Framework_TestCase {
+class RoutesTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @test
@@ -39,9 +41,16 @@ class UrlTest extends \PHPUnit_Framework_TestCase {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function create() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id=1');
+        $options = [
+            'routes' => __DIR__ . '/../app/config/rest_driver_routing.yml'
+        ];
 
-        $this->assertSame('http://circle.ai/products/1', Url::create($tokens, 'http://circle.ai', []));
+        $routes = [
+            'products' => [
+                'post' => 'products/create'
+            ]
+        ];
+
+        $this->assertEquals(new ArrayCollection($routes), Routes::create($options));
     }
 }

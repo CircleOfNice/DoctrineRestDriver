@@ -18,6 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Types;
 
+use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Validation\Assertions;
 
 /**
@@ -33,17 +34,23 @@ class Url {
      *
      * @param  array  $tokens
      * @param  string $apiUrl
+     * @param  array  $options
      * @return string
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public static function create(array $tokens, $apiUrl) {
+    public static function create(array $tokens, $apiUrl, array $options) {
         Assertions::assertHashMap('tokens', $tokens);
+        Assertions::assertHashMap('options', $options);
 
+        $routes = Routes::create($options);
+        $method = HttpMethods::ofSqlOperation(SqlOperation::create($tokens));
         $table  = Table::create($tokens);
+        $route  = !empty($routes->get($table)) && array_key_exists($method, $routes->get($table)) ? $routes->get($table)[$method] : $table;
+
         $id     = Id::create($tokens);
         $idPath = empty($id) ? '' : '/' . $id;
 
-        return Assertions::isUrl($table) ? $table . $idPath : $apiUrl . '/' . $table . $idPath;
+        return Assertions::isUrl($route) ? $route . $idPath : $apiUrl . '/' . $route . $idPath;
     }
 }

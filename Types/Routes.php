@@ -16,32 +16,34 @@
  * along with DoctrineRestDriver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Circle\DoctrineRestDriver\Tests\Types;
+namespace Circle\DoctrineRestDriver\Types;
 
-use Circle\DoctrineRestDriver\Types\Url;
-use PHPSQLParser\PHPSQLParser;
+use Circle\DoctrineRestDriver\Enums\SqlOperations;
+use Circle\DoctrineRestDriver\Validation\Assertions;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Yaml\Yaml;
 
 /**
- * Tests the url type
+ * Type to create an ArrayCollection containing all routes
+ * from the configuration file
  *
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
- *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Url
  */
-class UrlTest extends \PHPUnit_Framework_TestCase {
+class Routes {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
+     * Returns an ArrayCollection of all routes configurated
+     * in the rest_driver_config.yml file
+     *
+     * @param  array           $options
+     * @return ArrayCollection
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function create() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id=1');
+    public static function create(array $options) {
+        Assertions::assertHashMap('options', $options);
 
-        $this->assertSame('http://circle.ai/products/1', Url::create($tokens, 'http://circle.ai', []));
+        return !empty($options['routes']) ? new ArrayCollection(Yaml::parse(file_get_contents($options['routes']))['routes']) : new ArrayCollection();
     }
 }

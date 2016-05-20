@@ -49,7 +49,7 @@ class RequestFactory {
      */
     public function createOne(array $tokens, $apiUrl, array $options) {
         $method  = HttpMethods::ofSqlOperation(SqlOperation::create($tokens));
-        $url     = Url::create($tokens, $apiUrl);
+        $url     = Url::create($tokens, $apiUrl, $options);
         $query   = HttpQuery::create($tokens);
         $payload = $method === HttpMethods::GET || $method === HttpMethods::DELETE ? null : Payload::create($tokens);
 
