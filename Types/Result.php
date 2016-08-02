@@ -18,6 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Types;
 use Circle\DoctrineRestDriver\Enums\SqlOperations;
+use Circle\DoctrineRestDriver\Validation\Assertions;
 use PHPSQLParser\PHPSQLParser;
 
 /**
@@ -39,8 +40,12 @@ class Result {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function create($query, $content) {
+        $queryParts = explode(' ', $query);
+        $transformedQuery = array_reduce($queryParts, function($carry, $part) {
+            return $carry . (Assertions::isUrl($part) ? (' "' . $part . '" ') : ($part . ' '));
+        });
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse($query);
+        $tokens   = $parser->parse($transformedQuery);
         $operator = strtolower(array_keys($tokens)[0]);
 
         if ($operator === SqlOperations::DELETE) return [];

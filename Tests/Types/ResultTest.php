@@ -58,6 +58,27 @@ class ResultTest extends \PHPUnit_Framework_TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    public function createWithSelectContainingFullUrl() {
+        $content = [
+            'name' => 'testname'
+        ];
+
+        $expected = [
+            [
+                't0.name' => 'testname'
+            ]
+        ];
+
+        $this->assertEquals($expected, Result::create('SELECT t0.name FROM http://example.com/products t0', $content));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::create
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function createWithDelete() {
         $content = [
             'name' => 'testname'
