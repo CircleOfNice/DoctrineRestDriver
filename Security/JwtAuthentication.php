@@ -52,7 +52,7 @@ class JwtAuthentication implements AuthStrategy {
         $options  = $request->getCurlOptions();
         
         $concatenateBeforeToken = "";
-        if(issset($this->config['driverOptions']['jwt_prefix']))
+        if(isset($this->config['driverOptions']['jwt_prefix']))
         {
             $concatenateBeforeToken = $this->config['driverOptions']['jwt_prefix'];
         }
