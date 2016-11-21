@@ -48,7 +48,7 @@ doctrine:
       format:                         "json"
       authenticator_class:            "HttpAuthentication"
       CURLOPT_CURLOPT_FOLLOWLOCATION: true
-      CURLOPT_HEADER:                 true
+      CURLOPT_HEADER:                 false
 ```
 
 A full list of all possible options can be found here: http://php.net/manual/en/function.curl-setopt.php
@@ -782,6 +782,30 @@ GET  http://api.addresses.your-url.com/addresses/1 HTTP/1.1
 ```
 
 Afterwards both entities are persisted in the default MySQL database.
+
+#Jwt authentication
+To use Jwt authentication you need to specify authenticator as JwtAuthentication
+
+Jwt authentication specific options:
+jwt_url: the url where the token can be retrieved from
+user: jwt user
+password: jwt_password
+revalidate_token_time: specify how many seconds before the token expiers it should be revalidated. Defaults to 5.
+jwt_prefix: To add a string before teh token. Defaults to empty string.
+```yml
+doctrine:
+  dbal:
+    driver_class: "Circle\\DoctrineRestDriver\\Driver"
+    host:         "%default_api_url%"
+    port:         "%default_api_port%"
+    user:         "%default_api_username%"
+    password:     "%default_api_password%"
+    options:
+      jwt_url:                  "%jwt_url%"
+      authenticator_class:      "JwtAuthentication" 
+      revalidate_token_time:    5
+      jwt_prefix:               ""
+```
 
 #Testing
 
