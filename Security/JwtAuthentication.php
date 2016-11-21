@@ -106,7 +106,10 @@ class JwtAuthentication implements AuthStrategy {
         $date = new \DateTime();
         $timestamp = $date->getTimestamp();
         
-        if( ($expireTimestamp + $revalidateTime) > $timestamp)
+        
+        $expiresAt = $expireTimestamp + $revalidateTime;
+        
+        if( $expiresAt < $timestamp)
         {
             return true;
         }
