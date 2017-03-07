@@ -36,9 +36,8 @@ class HttpHeader {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function create(array $options, array $tokens) {
+        
         $headers = empty($options['CURLOPT_HTTPHEADER']) ? [] : $options['CURLOPT_HTTPHEADER'];
-
-        $headers = empty($headers) ? [] : $headers;
         $headers = is_string($headers) ? explode(',', $headers) : $headers;
 
         $headers = array_merge(
