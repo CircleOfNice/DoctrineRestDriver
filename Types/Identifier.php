@@ -46,7 +46,7 @@ class Identifier {
 
         return array_reduce($tokens['WHERE'], function($carry, $token) use ($tokens, $idAlias) {
             if (!is_int($carry)) return $carry;
-            if ($token['expr_type'] === 'colref' && $token['base_expr'] === $idAlias) return $tokens['WHERE'][$carry+2]['base_expr'];
+            if ($token['expr_type'] === 'colref' && $token['base_expr'] === $idAlias && !in_array($tokens['WHERE'][$carry+2]['expr_type'], array('in-list'))) return $tokens['WHERE'][$carry+2]['base_expr'];
             if (!isset($tokens[$carry+1])) return '';
         }, 0);
     }

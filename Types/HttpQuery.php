@@ -46,7 +46,7 @@ class HttpQuery {
 
         $tableAlias = Table::alias($tokens);
         $query      = array_reduce($tokens['WHERE'], function($query, $token) use ($tableAlias) {
-            return $query . str_replace('"', '', str_replace('OR', '|', str_replace('AND', '&', str_replace($tableAlias . '.', '', $token['base_expr']))));
+            return $query . trim(str_replace('IN', '=', str_replace('"', '', str_replace('OR', '|', str_replace('AND', '&', str_replace($tableAlias . '.', '', $token['base_expr']))))), '()');
         });
 
         return preg_replace('/id\=\d*&*/', '', $query);
