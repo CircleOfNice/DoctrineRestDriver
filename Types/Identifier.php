@@ -83,6 +83,14 @@ class Identifier {
 
         $idColumns  = !empty($meta) ? end($meta)->getIdentifierColumnNames() : [];
 
-        return !empty($idColumns) ? end($idColumns) : 'id';
+        if (empty($idColumns)) {
+            foreach ($tokens['SELECT'] as $key => $token) {
+                if ($token['expr_type'] == 'reserved') {
+                    array_splice($tokens['SELECT'], $key, 1);
+                }
+            }
+        }
+
+        return !empty($idColumns) ? end($idColumns) : end($tokens['SELECT'][0]['no_quotes']['parts']);
     }
 }
