@@ -35,7 +35,7 @@ class Driver implements DriverInterface {
     /**
      * @var Connection
      */
-    private $connection;
+    protected $connection;
 
     /**
      * {@inheritdoc}

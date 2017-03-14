@@ -37,7 +37,7 @@ class RestClient {
     /**
      * @var CiRestClient
      */
-    private $restClient;
+    protected $restClient;
 
     /**
      * RestClient constructor
