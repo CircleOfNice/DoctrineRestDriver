@@ -40,6 +40,12 @@ class SelectSingleResult {
         HashMap::assert($tokens, 'tokens');
         $tableAlias = Table::alias($tokens);
 
+        foreach ($tokens['SELECT'] as $key => $token) {
+            if ($token['expr_type'] == 'reserved') {
+                unset($tokens['SELECT'][$key]);
+            }
+        }
+
         $attributeValueMap = array_map(function($token) use ($content, $tableAlias) {
             $key   = empty($token['alias']['name']) ? $token['base_expr'] : $token['alias']['name'];
             $value = $content[str_replace($tableAlias . '.', '', $token['base_expr'])];
