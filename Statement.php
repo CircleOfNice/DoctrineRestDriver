@@ -43,62 +43,62 @@ class Statement implements \IteratorAggregate, StatementInterface {
     /**
      * @var string
      */
-    private $query;
+    protected $query;
 
     /**
      * @var MysqlToRequest
      */
-    private $mysqlToRequest;
+    protected $mysqlToRequest;
 
     /**
      * @var array
      */
-    private $params = [];
+    protected $params = [];
 
     /**
      * @var RestClient
      */
-    private $restClient;
+    protected $restClient;
 
     /**
      * @var array
      */
-    private $result;
+    protected $result;
 
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var int
      */
-    private $errorCode;
+    protected $errorCode;
 
     /**
      * @var string
      */
-    private $errorMessage;
+    protected $errorMessage;
 
     /**
      * @var int
      */
-    private $fetchMode;
+    protected $fetchMode;
 
     /**
      * @var AuthStrategy
      */
-    private $authStrategy;
+    protected $authStrategy;
 
     /**
      * @var RoutingTable
      */
-    private $routings;
+    protected $routings;
 
     /**
      * @var array
      */
-    private $options;
+    protected $options;
 
     /**
      * Statement constructor

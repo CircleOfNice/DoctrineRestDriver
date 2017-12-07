@@ -31,7 +31,7 @@ class MetaData {
     /**
      * @var ObjectManager
      */
-    private $em;
+    protected $em;
 
     /**
      * MetaData constructor

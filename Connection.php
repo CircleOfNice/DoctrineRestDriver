@@ -34,12 +34,12 @@ class Connection extends AbstractConnection {
     /**
      * @var Statement
      */
-    private $statement;
+    protected $statement;
 
     /**
      * @var array
      */
-    private $routings;
+    protected $routings;
 
     /**
      * Connection constructor
