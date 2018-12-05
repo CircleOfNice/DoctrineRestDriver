@@ -66,21 +66,110 @@ class InsertChangeSet {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function values(array $tokens) {
-        $values = explode(',', self::removeBrackets(self::removeSpacesBetweenComma(end($tokens['VALUES'])['base_expr'])));
+        $values = self::removeBrackets(end($tokens['VALUES'])['base_expr']);
 
         return array_map(function($value) {
             return Value::create($value);
-        }, $values);
+        }, static::parseValueStringToArray($values));
     }
 
     /**
-     * removes spaces between commas
+     * parses the values string into a an array that has the correct amount of values, compared with the column array.
      *
-     * @param  string $string
-     * @return string
+     * @see isCharStringDelimiter for a list of valid string starting characters.
+     * @see SqlQuery::quote() for the place where the automatic escape happens
+     *
+     * @param string $values
+     *
+     * @return array
      */
-    private static function removeSpacesBetweenComma($string) {
-        return str_replace(', ', ',', $string);
+    private static function parseValueStringToArray($values) {
+        $valueArray        = [''];
+        $currentValue      = 0;
+        $stringOffset      = 0;
+        $isString          = false;
+        $stringStartedWith = null;
+        $escapeChar        = null;
+        $previousChar      = null;
+
+        while (($char = substr($values, $stringOffset++, 1)) !== false)
+        {
+            // Handle the beginning, ending and escaping of characters
+            if (static::isCharStringDelimiter($char, $stringStartedWith)) {
+                if (static::isCharacterEscaped($previousChar, $escapeChar)) {
+                    $valueArray[$currentValue] .= $char;
+                }
+
+                $stringStartedWith = null;
+
+                // Set the string that started this string sequence and also define it as the current escape character
+                if ($isString === false) {
+                    $stringStartedWith = $char;
+                    $escapeChar        = $char;
+                }
+
+                // toggle string mode
+                $isString     = !$isString;
+                $previousChar = $char;
+                continue;
+            }
+
+            // move the current value pointer to the next array key and create an empty string in it.
+            if (!$isString && $char === ',') {
+                $valueArray[++$currentValue] = '';
+                $previousChar                = $char;
+                continue;
+            }
+
+            // skip whitespace characters when the current value is not flagged as a string
+            if (!$isString && $char === ' ') {
+                $previousChar = $char;
+                continue;
+            }
+
+            // simply append the current character at the current array position
+            $valueArray[$currentValue] .= $char;
+            $previousChar              = $char;
+        }
+
+        return $valueArray;
+    }
+
+    /**
+     * Checks if the character is on the list of starting characters
+     *
+     * @param string $char
+     *
+     * @return bool
+     */
+    private static function isStringStartingCharacter($char) {
+        return $char === '\'' || $char === '"' || $char === '`';
+    }
+
+    /**
+     * Checks if the character is on the list of starting characters and if it's identical to the starting character of
+     * the current string.
+     *
+     * @param string      $char
+     * @param string|null $startingChar
+     *
+     * @return bool
+     */
+    private static function isCharStringDelimiter($char, $startingChar) {
+        return static::isStringStartingCharacter($char)
+               && ($char === $startingChar || $startingChar === null);
+    }
+
+    /**
+     * checks if there is a previous char and also verifies that the previous char is identical to the escapeChar
+     *
+     * @param string|null $previousChar
+     * @param string      $escapeChar
+     *
+     * @return bool
+     */
+    private static function isCharacterEscaped($previousChar, $escapeChar) {
+        return $previousChar !== null && $previousChar === $escapeChar;
     }
 
     /**

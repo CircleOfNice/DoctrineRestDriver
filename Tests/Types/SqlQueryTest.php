@@ -54,6 +54,28 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @test
+     * @group  unit
+     * @covers ::setParams
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function insertStatement() {
+        $query = "INSERT INTO products (name, active, foo, cost) VALUES (?, ?, ?, ?)";
+
+        $params = [
+            'tag1,tag2,tag3',
+            true,
+            false,
+            2.5
+        ];
+
+        $expected = "INSERT INTO products (name, active, foo, cost) VALUES ('tag1,tag2,tag3', true, false, 2.5)";
+
+        $this->assertSame($expected, SqlQuery::setParams($query, $params));
+    }
+
+    /**
+     * @test
      * @group unit
      * @covers ::getStringRepresentation
      *
@@ -61,13 +83,28 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getStringRepresentation() {
+        $this->assertSame('\'\'\'foo\'\'\'', SqlQuery::getStringRepresentation('\'foo\''));
+        $this->assertSame('\'foo\'', SqlQuery::getStringRepresentation('foo'));
         $this->assertSame('true', SqlQuery::getStringRepresentation(true));
         $this->assertSame('false', SqlQuery::getStringRepresentation(false));
         $this->assertSame('null', SqlQuery::getStringRepresentation(null));
 
+        $this->assertNotSame('\'foo\'', SqlQuery::getStringRepresentation('bar'));
         $this->assertNotSame('null', SqlQuery::getStringRepresentation(false));
         $this->assertNotSame('null', SqlQuery::getStringRepresentation(true));
         $this->assertNotSame('null', SqlQuery::getStringRepresentation(0));
+    }
+
+    /**
+     * @test
+     * @group unit
+     * @covers ::quote
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function quote() {
+        $this->assertSame('\'\'foo\'\'', SqlQuery::quote('\'foo\''));
+        $this->assertSame('foo', SqlQuery::quote('foo'));
     }
 
     /**

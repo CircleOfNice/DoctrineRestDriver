@@ -79,9 +79,9 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      */
     public function createWithQuotesInQuotedValues() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('INSERT INTO products (name, value, foo) VALUES ("testname", `testvalue`, \'b\'\'ar\')');
+        $tokens   = $parser->parse('INSERT INTO products (name, value, foo) VALUES ("test,name", `testvalue`, \'b\'\'ar\')');
         $expected = [
-            'name'  => 'testname',
+            'name'  => 'test,name',
             'value' => 'testvalue',
             'foo'   => 'b\'ar',
         ];
