@@ -47,6 +47,12 @@ class ValueTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame('\'hello"', Value::create('\'hello"'));
         $this->assertSame('\'hel\'lo\'', Value::create('\'\'hel\'\'lo\'\''));
 
+        $this->assertSame("h\ne\nl\nl\no", Value::create("'h\ne\nl\nl\no'"));
+        $this->assertNotSame("h\ne\nl\nl\no", Value::create("'h\ne\nl\nl\no'\n"));
+
+        // any character outside of the quotes skips the "de-quoting"
+        $this->assertSame("'hello'\n", Value::create("'hello'\n"));
+
         $encoded = '{"test":true}';
 
         $this->assertSame($encoded, Value::create("\"{$encoded}\""));
