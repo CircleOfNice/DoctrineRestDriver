@@ -114,7 +114,7 @@ class InsertChangeSet {
             }
 
             // skip whitespace characters when the current value is not flagged as a string
-            if (!$isString && $char === ' ') {
+            if (!$isString && preg_match('/\s/', $char)) {
                 continue;
             }
 

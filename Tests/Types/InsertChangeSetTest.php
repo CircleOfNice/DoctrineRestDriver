@@ -58,11 +58,11 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function createWithQuotedValues() {
+    public function createWithQuotedValuesWithWhiteSpaces() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('INSERT INTO products (name, value) VALUES ("testname", `testvalue`)');
+        $tokens   = $parser->parse("INSERT INTO products (name, value) VALUES (' testname\n', `testvalue`)");
         $expected = [
-            'name'  => 'testname',
+            'name'  => " testname\n",
             'value' => 'testvalue',
         ];
 
