@@ -97,6 +97,24 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    public function createWithSurroundingQuotedValues() {
+        $parser   = new PHPSQLParser();
+        $tokens   = $parser->parse("INSERT INTO products (name) VALUES ('''test,name''')");
+        $expected = [
+            'name'  => '\'test,name\'',
+        ];
+
+        $this->assertSame($expected, InsertChangeSet::create($tokens));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::create
+     * @covers ::<private>
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function createWithIntValue() {
         $parser   = new PHPSQLParser();
         $tokens   = $parser->parse('INSERT INTO products (name, value) VALUES (testname, 1)');

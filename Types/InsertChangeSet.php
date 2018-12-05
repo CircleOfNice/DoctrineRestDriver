@@ -91,47 +91,35 @@ class InsertChangeSet {
         $stringOffset      = 0;
         $isString          = false;
         $stringStartedWith = null;
-        $escapeChar        = null;
-        $previousChar      = null;
 
         while (($char = substr($values, $stringOffset++, 1)) !== false)
         {
             // Handle the beginning, ending and escaping of characters
             if (static::isCharStringDelimiter($char, $stringStartedWith)) {
-                if (static::isCharacterEscaped($previousChar, $escapeChar)) {
-                    $valueArray[$currentValue] .= $char;
-                }
-
                 $stringStartedWith = null;
 
                 // Set the string that started this string sequence and also define it as the current escape character
                 if ($isString === false) {
                     $stringStartedWith = $char;
-                    $escapeChar        = $char;
                 }
 
                 // toggle string mode
-                $isString     = !$isString;
-                $previousChar = $char;
-                continue;
+                $isString = !$isString;
             }
 
             // move the current value pointer to the next array key and create an empty string in it.
             if (!$isString && $char === ',') {
                 $valueArray[++$currentValue] = '';
-                $previousChar                = $char;
                 continue;
             }
 
             // skip whitespace characters when the current value is not flagged as a string
             if (!$isString && $char === ' ') {
-                $previousChar = $char;
                 continue;
             }
 
             // simply append the current character at the current array position
             $valueArray[$currentValue] .= $char;
-            $previousChar              = $char;
         }
 
         return $valueArray;
@@ -160,18 +148,6 @@ class InsertChangeSet {
     private static function isCharStringDelimiter($char, $startingChar) {
         return static::isStringStartingCharacter($char)
                && ($char === $startingChar || $startingChar === null);
-    }
-
-    /**
-     * checks if there is a previous char and also verifies that the previous char is identical to the escapeChar
-     *
-     * @param string|null $previousChar
-     * @param string      $escapeChar
-     *
-     * @return bool
-     */
-    private static function isCharacterEscaped($previousChar, $escapeChar) {
-        return $previousChar !== null && $previousChar === $escapeChar;
     }
 
     /**
