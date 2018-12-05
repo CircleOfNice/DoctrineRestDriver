@@ -31,9 +31,11 @@ class InsertChangeSet {
      * into json
      *
      * @param  array $tokens
-     * @return string
+     *
+     * @return array|bool
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
+     * @throws \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
     public static function create(array $tokens) {
         HashMap::assert($tokens, 'tokens');
