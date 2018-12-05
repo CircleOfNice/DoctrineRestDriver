@@ -39,12 +39,12 @@ class UpdateChangeSet {
         HashMap::assert($tokens, 'tokens');
 
         $columns = array_map(function($token) {
-            $segments = explode('=', $token['base_expr']);
+            $segments = explode('=', $token['base_expr'], 2);
             return trim($segments[0]);
         }, $tokens['SET']);
 
         $values = array_map(function($token) {
-            $segments = explode('=', $token['base_expr']);
+            $segments = explode('=', $token['base_expr'], 2);
             return Value::create(trim($segments[1]));
         }, $tokens['SET']);
 
