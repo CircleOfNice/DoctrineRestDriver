@@ -46,9 +46,20 @@ class Value {
         if($value === 'null')  return null;
 
         $unquoted = preg_replace('/^(?|\"(.*)\"|\\\'(.*)\\\'|\`(.*)\`)$/', '$1', $value);
-        if (!is_numeric($unquoted))                   return $unquoted;
+        if (!is_numeric($unquoted))                   return static::unquote($unquoted);
         if ((string) intval($unquoted) === $unquoted) return intval($unquoted);
 
         return floatval($unquoted);
+    }
+
+    /**
+     * undoes the quoting
+     *
+     * @param string $param
+     *
+     * @return string
+     */
+    public static function unquote($param) {
+        return str_replace('\'\'', '\'', $param);
     }
 }

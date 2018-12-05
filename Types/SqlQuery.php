@@ -61,12 +61,23 @@ class SqlQuery {
     {
         if (is_int($param) || is_float($param)) return $param;
         if (is_numeric($param))                 return (float)$param;
-        if (is_string($param))                  return '\'' . $param . '\'';
+        if (is_string($param))                  return '\'' . static::quote($param) . '\'';
         if ($param === true)                    return 'true';
         if ($param === false)                   return 'false';
         if ($param === null)                    return 'null';
 
         throw new \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException('string | int | float | bool | null', '$param', $param);
+    }
+
+    /**
+     * quotes single quotes sql-like with another single quote
+     *
+     * @param string $param
+     *
+     * @return string
+     */
+    public static function quote($param) {
+        return str_replace('\'', '\'\'', $param);
     }
 
     /**

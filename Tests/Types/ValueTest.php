@@ -45,6 +45,7 @@ class ValueTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame('hello', Value::create('\'hello\''));
         $this->assertSame('hello', Value::create('`hello`'));
         $this->assertSame('\'hello"', Value::create('\'hello"'));
+        $this->assertSame('\'hel\'lo\'', Value::create('\'\'hel\'\'lo\'\''));
 
         $encoded = '{"test":true}';
 
@@ -56,5 +57,16 @@ class ValueTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame(null, Value::create('null'));
 
         $this->assertNotSame(null, Value::create('false'));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::unquote
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function unquote() {
+        $this->assertSame('\'foo\'bar"', Value::unquote('\'foo\'\'bar"'));
     }
 }
