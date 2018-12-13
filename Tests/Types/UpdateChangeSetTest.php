@@ -40,7 +40,7 @@ class UpdateChangeSetTest extends \PHPUnit\Framework\TestCase {
      */
     public function create() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('UPDATE products set name="test,name", value="testvalue" WHERE id=1');
+        $tokens   = $parser->parse('UPDATE products set `name`="test,name", value="testvalue" WHERE id=1');
         $expected = [
             'name'  => 'test,name',
             'value' => 'testvalue',
@@ -58,7 +58,7 @@ class UpdateChangeSetTest extends \PHPUnit\Framework\TestCase {
      */
     public function createRemovesWhitespace() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('UPDATE products set name = "test,name", value = "x=2" WHERE id = 1');
+        $tokens   = $parser->parse('UPDATE products set name = "test,name", `value` = "x=2" WHERE `id` = 1');
         $expected = [
             'name'  => 'test,name',
             'value' => 'x=2',

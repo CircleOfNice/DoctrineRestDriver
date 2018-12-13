@@ -70,7 +70,7 @@ class HttpQuery {
 
         // Get WHERE conditions as string including table alias and primary key column if present
         $sqlWhereString = array_reduce($tokens['WHERE'], function($query, $token) use ($tableAlias) {
-            $baseExpr = str_replace(['"', '\''], '', str_replace('OR', '|', str_replace('AND', '&', $token['base_expr'])));
+            $baseExpr = str_replace(['"', '\'', '`'], '', str_replace('OR', '|', str_replace('AND', '&', $token['base_expr'])));
 
             return $query . ($token['expr_type'] == 'const' ? urlencode($baseExpr) : $baseExpr);
         });

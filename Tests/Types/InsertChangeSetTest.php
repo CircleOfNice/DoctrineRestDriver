@@ -41,7 +41,7 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      */
     public function createWithRawValues() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('INSERT INTO products (name, value) VALUES (testname, testvalue)');
+        $tokens   = $parser->parse('INSERT INTO products (`name`, value) VALUES (testname, testvalue)');
         $expected = [
             'name'  => 'testname',
             'value' => 'testvalue',
