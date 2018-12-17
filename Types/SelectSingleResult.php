@@ -41,8 +41,8 @@ class SelectSingleResult {
         $tableAlias = Table::alias($tokens);
 
         $attributeValueMap = array_map(function($token) use ($content, $tableAlias) {
-            $key   = empty($token['alias']['name']) ? $token['base_expr'] : $token['alias']['name'];
-            $value = $content[str_replace($tableAlias . '.', '', $token['base_expr'])];
+            $key   = str_replace('`', '', empty($token['alias']['name']) ? $token['base_expr'] : $token['alias']['name']);
+            $value = $content[str_replace([$tableAlias . '.', '`'], '', $token['base_expr'])];
             return [$key => $value];
         }, $tokens['SELECT']);
 

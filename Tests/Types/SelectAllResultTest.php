@@ -40,25 +40,29 @@ class SelectAllResultTest extends \PHPUnit\Framework\TestCase {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function create() {
-        $query  = 'SELECT name FROM products';
+        $query  = 'SELECT `name`, age FROM products';
         $parser = new PHPSQLParser();
         $tokens = $parser->parse($query);
 
         $content = [
             [
-                'name' => 'username'
+                'name' => 'username',
+                'age'  => 18,
             ],
             [
-                'name' => 'anotherUser'
+                'name' => 'anotherUser',
+                'age'  => 45,
             ],
         ];
 
         $expected = [
             [
-                'name' => 'username'
+                'name' => 'username',
+                'age'  => 18,
             ],
             [
-                'name' => 'anotherUser'
+                'name' => 'anotherUser',
+                'age'  => 45,
             ],
         ];
 
