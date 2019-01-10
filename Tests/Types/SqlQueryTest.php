@@ -18,6 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
+use Circle\DoctrineRestDriver\Exceptions\QueryParameterMismatchException;
 use Circle\DoctrineRestDriver\Types\SqlQuery;
 
 /**
@@ -64,15 +65,50 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
         $query = "INSERT INTO products (name, active, foo, cost) VALUES (?, ?, ?, ?)";
 
         $params = [
-            'tag1,tag2,tag3',
+            '?tag1?,tag2?,tag3?',
             true,
             false,
             2.5
         ];
 
-        $expected = "INSERT INTO products (name, active, foo, cost) VALUES ('tag1,tag2,tag3', true, false, 2.5)";
+        $expected = "INSERT INTO products (name, active, foo, cost) VALUES ('?tag1?,tag2?,tag3?', true, false, 2.5)";
 
         $this->assertSame($expected, SqlQuery::setParams($query, $params));
+    }
+
+    /**
+     * Provides queries and expected url's
+     *
+     * @see UrlTest::createFromTokens()
+     *
+     * @return array
+     */
+    public function parameterCountProvider() {
+        return [
+            ["INSERT INTO `products` (`name`, `active`) VALUES (?, ?)", ['foo']],
+            ["INSERT INTO `products` (`name`, `active`) VALUES (?, ?)", ['foo', false, true]],
+        ];
+    }
+
+    /**
+     * @test
+     * @group        unit
+     * @covers ::setParams
+     *
+     * @dataProvider parameterCountProvider
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     * @param $query
+     * @param $params
+     *
+     * @throws QueryParameterMismatchException
+     * @throws \Circle\DoctrineRestDriver\Validation\Exceptions\NotNilException
+     */
+    public function parameterCount($query, $params)
+    {
+        $this->expectException(QueryParameterMismatchException::class);
+
+        SqlQuery::setParams($query, $params);
     }
 
     /**
