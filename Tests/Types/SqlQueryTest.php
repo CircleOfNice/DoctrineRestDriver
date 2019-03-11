@@ -39,7 +39,7 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function setParams() {
-        $query  = 'SELECT name FROM products WHERE id=? AND name=? AND foo = ? AND parent = ? AND active = ? AND foo = ? AND cost = ? OR cost = ?';
+        $query  = 'SELECT name FROM products WHERE id=? AND name=? AND foo = ? AND parent = ? AND active = ? AND foo = ? AND cost = ? OR cost = ? AND phone = ?';
         $params = [
             1,
             'my\'Name',
@@ -49,8 +49,9 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
             false,
             0.0,
             '2.5',
+            '0049',
         ];
-        $expected = 'SELECT name FROM products WHERE id=1 AND name=\'my\'\'Name\' AND foo = \'b=a,r\' AND parent = null AND active = true AND foo = false AND cost = 0 OR cost = 2.5';
+        $expected = 'SELECT name FROM products WHERE id=1 AND name=\'my\'\'Name\' AND foo = \'b=a,r\' AND parent = null AND active = true AND foo = false AND cost = 0 OR cost = 2.5 AND phone = \'0049\'';
         $this->assertSame($expected, SqlQuery::setParams($query, $params));
     }
 
