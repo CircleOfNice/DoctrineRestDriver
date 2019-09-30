@@ -40,8 +40,8 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
      */
     public function create() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('SELECT name FROM products t0 WHERE t0.id=1 AND t0.value="testvalue" AND t0.name="testname"');
-        $expected = 'value=testvalue&name=testname';
+        $tokens   = $parser->parse('SELECT name FROM products t0 WHERE t0.id=1 AND t0.value="x=1" AND t0.name="test, name" OR (1=2 AND foo="bar")');
+        $expected = 'value=x=1&name=test, name|(1=2 & foo=bar)';
 
         $this->assertSame($expected, HttpQuery::create($tokens));
     }
@@ -73,7 +73,7 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
             'pagination_as_query' => true,
         ];
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('SELECT name FROM products WHERE foo="bar" LIMIT 5 OFFSET 10');
+        $tokens   = $parser->parse('SELECT name FROM products WHERE `foo`="bar" LIMIT 5 OFFSET 10');
         $expected = 'foo=bar&per_page=5&page=3';
 
         $this->assertSame($expected, HttpQuery::create($tokens, $options));
@@ -93,7 +93,7 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
             'page_param'          => 'newkey_page',
         ];
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('SELECT name FROM products WHERE foo="bar" LIMIT 5 OFFSET 10');
+        $tokens   = $parser->parse('SELECT `name` FROM products WHERE foo="bar" LIMIT 5 OFFSET 10');
         $expected = 'foo=bar&newkey_per_page=5&newkey_page=3';
 
         $this->assertSame($expected, HttpQuery::create($tokens, $options));

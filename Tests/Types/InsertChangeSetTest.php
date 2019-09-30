@@ -41,7 +41,7 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      */
     public function createWithRawValues() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('INSERT INTO products (name, value) VALUES (testname, testvalue)');
+        $tokens   = $parser->parse('INSERT INTO products (`name`, value) VALUES (testname, testvalue)');
         $expected = [
             'name'  => 'testname',
             'value' => 'testvalue',
@@ -58,12 +58,50 @@ class InsertChangeSetTest extends \PHPUnit\Framework\TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function createWithQuotedValues() {
+    public function createWithQuotedValuesWithWhiteSpaces() {
         $parser   = new PHPSQLParser();
-        $tokens   = $parser->parse('INSERT INTO products (name, value) VALUES ("testname", `testvalue`)');
+        $tokens   = $parser->parse("INSERT INTO products (name, value) VALUES (' testname\n', `testvalue`)");
         $expected = [
-            'name'  => 'testname',
+            'name'  => " testname\n",
             'value' => 'testvalue',
+        ];
+
+        $this->assertSame($expected, InsertChangeSet::create($tokens));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::create
+     * @covers ::<private>
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function createWithQuotesInQuotedValues() {
+        $parser   = new PHPSQLParser();
+        $tokens   = $parser->parse('INSERT INTO products (name, value, foo) VALUES ("test,name", `testvalue`, \'b\'\'ar\')');
+        $expected = [
+            'name'  => 'test,name',
+            'value' => 'testvalue',
+            'foo'   => 'b\'ar',
+        ];
+
+        $this->assertSame($expected, InsertChangeSet::create($tokens));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::create
+     * @covers ::<private>
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function createWithSurroundingQuotedValues() {
+        $parser   = new PHPSQLParser();
+        $tokens   = $parser->parse("INSERT INTO products (name) VALUES ('''test,name''')");
+        $expected = [
+            'name'  => '\'test,name\'',
         ];
 
         $this->assertSame($expected, InsertChangeSet::create($tokens));

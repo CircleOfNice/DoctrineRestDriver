@@ -47,11 +47,11 @@ class Url {
         Str::assert($apiUrl, 'apiUrl');
         MaybeString::assert($id, 'id');
 
-        $idPath = empty($id) ? '' : '/' . $id;
+        $idPath = empty($id) ? '' : '/' . rawurlencode($id);
 
         if (!self::is($route))               return $apiUrl . '/' . $route . $idPath;
         if (!preg_match('/\{id\}/', $route)) return $route . $idPath;
-        if (!empty($id))                     return str_replace('{id}', $id, $route);
+        if (!empty($id))                     return str_replace('{id}', rawurlencode($id), $route);
 
         return str_replace('/{id}', '', $route);
     }

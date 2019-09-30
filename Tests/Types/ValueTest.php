@@ -40,11 +40,19 @@ class ValueTest extends \PHPUnit\Framework\TestCase {
     public function create() {
         $this->assertSame(1, Value::create('1'));
         $this->assertSame(1.01, Value::create('1.01'));
+        $this->assertSame('00', Value::create('00'));
         $this->assertSame('hello', Value::create('hello'));
         $this->assertSame('hello', Value::create('"hello"'));
         $this->assertSame('hello', Value::create('\'hello\''));
         $this->assertSame('hello', Value::create('`hello`'));
         $this->assertSame('\'hello"', Value::create('\'hello"'));
+        $this->assertSame('\'hel\'lo\'', Value::create('\'\'hel\'\'lo\'\''));
+
+        $this->assertSame("h\ne\nl\nl\no", Value::create("'h\ne\nl\nl\no'"));
+        $this->assertNotSame("h\ne\nl\nl\no", Value::create("'h\ne\nl\nl\no'\n"));
+
+        // any character outside of the quotes skips the "de-quoting"
+        $this->assertSame("'hello'\n", Value::create("'hello'\n"));
 
         $encoded = '{"test":true}';
 
@@ -56,5 +64,16 @@ class ValueTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame(null, Value::create('null'));
 
         $this->assertNotSame(null, Value::create('false'));
+    }
+
+    /**
+     * @test
+     * @group  unit
+     * @covers ::unquote
+     *
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
+    public function unquote() {
+        $this->assertSame('\'foo\'bar"', Value::unquote('\'foo\'\'bar"'));
     }
 }

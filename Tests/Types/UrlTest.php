@@ -76,21 +76,42 @@ class UrlTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
+     * Provides queries and expected url's
+     *
+     * @see UrlTest::createFromTokens()
+     *
+     * @return array
+     */
+    public function queryUrlProvider() {
+        return [
+            ['SELECT name FROM products WHERE id=1', 'http://circle.ai/products/1'],
+            ['SELECT name FROM products WHERE id="foo"', 'http://circle.ai/products/foo'],
+            ['SELECT name FROM products WHERE id="\\Foo\\bar"', 'http://circle.ai/products/%5CFoo%5Cbar'],
+            ['SELECT name FROM products WHERE id="id with space"', 'http://circle.ai/products/id%20with%20space'],
+        ];
+    }
+
+    /**
      * @test
      * @group  unit
      * @covers ::createFromTokens
+     * @dataProvider queryUrlProvider
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
+     *
+     * @param $query
+     * @param $expectedUrl
      */
-    public function createFromTokens() {
-        $tokens     = (new PHPSQLParser())->parse('SELECT name FROM products WHERE id=1');
+    public function createFromTokens($query, $expectedUrl) {
+        $tokens     = (new PHPSQLParser())->parse($query);
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->exactly(2))
             ->method('getRoute')
             ->will($this->returnValue('http://circle.ai/products/{id}'));
 
-        $this->assertSame('http://circle.ai/products/1', Url::createFromTokens($tokens, 'http://circle.ai', $annotation));
+        $this->assertSame($expectedUrl, Url::createFromTokens($tokens, 'http://circle.ai', $annotation));
+        $this->assertSame($expectedUrl, Url::createFromTokens($tokens, 'http://circle.ai'));
     }
 
     /**

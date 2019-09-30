@@ -32,73 +32,41 @@ use PHPSQLParser\PHPSQLParser;
 class IdentifierTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
+     * Provides Querystring + expected result for
      *
-     * @SuppressWarnings("PHPMD.StaticAccess")
+     * @see IdentifierTest::create()
+     *
+     * @return array
      */
-    public function create() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id=1');
-
-        $this->assertSame('1', Identifier::create($tokens));
+    public function queryDataProvider() {
+        return [
+            ['SELECT name FROM products WHERE id="test"', 'test'],
+            ['SELECT name FROM products WHERE id="\\Foo\\bar"', '\\Foo\\bar'],
+            ['SELECT name FROM products WHERE id="id with space"', 'id with space'],
+            ['SELECT name FROM products WHERE id=\'test\'', 'test'],
+            ['SELECT name FROM products WHERE id=test', 'test'],
+            ['SELECT name FROM products WHERE id=1', '1'],
+            ['SELECT name FROM products WHERE name="test"', ''],
+        ];
     }
 
     /**
      * @test
-     * @group  unit
+     * @group        unit
      * @covers ::create
      *
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    public function createWithStringId() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id="test"');
-
-        $this->assertSame('test', Identifier::create($tokens));
-    }
-
-    /**
-     * @test
-     * @group  unit
-     * @covers ::create
+     * @dataProvider queryDataProvider
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    public function createWithStringIdSingleQuotes() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id=\'test\'');
-
-        $this->assertSame('test', Identifier::create($tokens));
-    }
-
-    /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
-     * @SuppressWarnings("PHPMD.StaticAccess")
+     * @param $query
+     * @param $expectedResult
      */
-    public function createWithStringIdNoQuotes() {
+    public function create($query, $expectedResult) {
         $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE id=test');
+        $tokens = $parser->parse($query);
 
-        $this->assertSame('test', Identifier::create($tokens));
-    }
-
-    /**
-     * @test
-     * @group  unit
-     * @covers ::create
-     *
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    public function createWithEmptyId() {
-        $parser = new PHPSQLParser();
-        $tokens = $parser->parse('SELECT name FROM products WHERE name="test"');
-
-        $this->assertSame('', Identifier::create($tokens));
+        $this->assertSame($expectedResult, Identifier::create($tokens));
     }
 
     /**

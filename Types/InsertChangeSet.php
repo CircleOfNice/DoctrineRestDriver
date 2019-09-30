@@ -31,9 +31,11 @@ class InsertChangeSet {
      * into json
      *
      * @param  array $tokens
-     * @return string
+     *
+     * @return array|bool
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
+     * @throws \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
     public static function create(array $tokens) {
         HashMap::assert($tokens, 'tokens');
@@ -66,21 +68,86 @@ class InsertChangeSet {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function values(array $tokens) {
-        $values = explode(',', self::removeBrackets(self::removeSpacesBetweenComma(end($tokens['VALUES'])['base_expr'])));
+        $values = self::removeBrackets(end($tokens['VALUES'])['base_expr']);
 
         return array_map(function($value) {
             return Value::create($value);
-        }, $values);
+        }, static::parseValueStringToArray($values));
     }
 
     /**
-     * removes spaces between commas
+     * parses the values string into a an array that has the correct amount of values, compared with the column array.
      *
-     * @param  string $string
-     * @return string
+     * @see isCharStringDelimiter for a list of valid string starting characters.
+     * @see SqlQuery::quote() for the place where the automatic escape happens
+     *
+     * @param string $values
+     *
+     * @return array
      */
-    private static function removeSpacesBetweenComma($string) {
-        return str_replace(', ', ',', $string);
+    private static function parseValueStringToArray($values) {
+        $valueArray        = [''];
+        $currentValue      = 0;
+        $stringOffset      = 0;
+        $isString          = false;
+        $stringStartedWith = null;
+
+        while (($char = substr($values, $stringOffset++, 1)) !== false)
+        {
+            // Handle the beginning, ending and escaping of characters
+            if (static::isCharStringDelimiter($char, $stringStartedWith)) {
+                $stringStartedWith = null;
+
+                // Set the string that started this string sequence and also define it as the current escape character
+                if ($isString === false) {
+                    $stringStartedWith = $char;
+                }
+
+                // toggle string mode
+                $isString = !$isString;
+            }
+
+            // move the current value pointer to the next array key and create an empty string in it.
+            if (!$isString && $char === ',') {
+                $valueArray[++$currentValue] = '';
+                continue;
+            }
+
+            // skip whitespace characters when the current value is not flagged as a string
+            if (!$isString && preg_match('/\s/', $char)) {
+                continue;
+            }
+
+            // simply append the current character at the current array position
+            $valueArray[$currentValue] .= $char;
+        }
+
+        return $valueArray;
+    }
+
+    /**
+     * Checks if the character is on the list of starting characters
+     *
+     * @param string $char
+     *
+     * @return bool
+     */
+    private static function isStringStartingCharacter($char) {
+        return $char === '\'' || $char === '"' || $char === '`';
+    }
+
+    /**
+     * Checks if the character is on the list of starting characters and if it's identical to the starting character of
+     * the current string.
+     *
+     * @param string      $char
+     * @param string|null $startingChar
+     *
+     * @return bool
+     */
+    private static function isCharStringDelimiter($char, $startingChar) {
+        return static::isStringStartingCharacter($char)
+               && ($char === $startingChar || $startingChar === null);
     }
 
     /**

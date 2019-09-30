@@ -18,6 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Types;
 
+use Circle\DoctrineRestDriver\Exceptions\QueryParameterMismatchException;
 use Circle\DoctrineRestDriver\Validation\Exceptions\NotNilException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
@@ -32,22 +33,44 @@ class SqlQuery {
     /**
      * replaces param placeholders with corresponding params
      *
+     * offset is moved to to the end of the newly added value so contained questionmarks are not interpreted as
+     * placeholders.
+     *
      * @param  string $query
      * @param  array  $params
+     *
      * @return string
      * @throws InvalidTypeException
      * @throws NotNilException
+     * @throws QueryParameterMismatchException
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function setParams($query, array $params = []) {
         Str::assert($query, 'query');
 
-        return array_reduce($params, function($query, $param) {
+        $offset = 0;
+
+        $result = array_reduce($params, function($query, $param) use (&$offset) {
             $param = self::getStringRepresentation($param);
 
-            return strpos($query, '?') ? substr_replace($query, $param, strpos($query, '?'), strlen('?')) : $query;
+            $needle = '?';
+            $pos    = strpos($query, $needle, $offset);
+
+            if ($pos === false) {
+                throw new QueryParameterMismatchException($query, $needle);
+            }
+
+            $offset = $pos + strlen($param);
+
+            return $pos ? substr_replace($query, $param, $pos, strlen($needle)) : $query;
         }, $query);
+
+        if (strpos($result, '?', $offset) !== false) {
+            throw new QueryParameterMismatchException($query, '?');
+        }
+
+        return $result;
     }
 
     /**
@@ -59,14 +82,26 @@ class SqlQuery {
      */
     public static function getStringRepresentation($param)
     {
-        if (is_int($param) || is_float($param)) return $param;
-        if (is_numeric($param))                 return (float)$param;
-        if (is_string($param))                  return '\'' . $param . '\'';
-        if ($param === true)                    return 'true';
-        if ($param === false)                   return 'false';
-        if ($param === null)                    return 'null';
+        if (is_int($param) || is_float($param))                     return $param;
+        if (is_numeric($param) && (string)(float)$param === $param) return (float)$param;
+        if (is_numeric($param) && (string)(int)$param === $param)   return (int)$param;
+        if (is_string($param))                                      return '\'' . static::quote($param) . '\'';
+        if ($param === true)                                        return 'true';
+        if ($param === false)                                       return 'false';
+        if ($param === null)                                        return 'null';
 
         throw new \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException('string | int | float | bool | null', '$param', $param);
+    }
+
+    /**
+     * quotes single quotes sql-like with another single quote
+     *
+     * @param string $param
+     *
+     * @return string
+     */
+    public static function quote($param) {
+        return str_replace('\'', '\'\'', $param);
     }
 
     /**

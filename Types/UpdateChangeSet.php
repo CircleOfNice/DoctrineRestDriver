@@ -31,20 +31,25 @@ class UpdateChangeSet {
      * into json
      *
      * @param  array $tokens
-     * @return string
+     *
+     * @return array|bool
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
+     * @throws \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
     public static function create(array $tokens) {
         HashMap::assert($tokens, 'tokens');
 
         $columns = array_map(function($token) {
-            $segments = explode('=', $token['base_expr']);
-            return trim($segments[0]);
+            return array_reduce($token['sub_tree'], function($carry, $token) {
+                if ($token['expr_type'] !== 'colref') return $carry;
+                if (isset($token['no_quotes'])) return $carry . implode('', $token['no_quotes']['parts']);
+                return $carry . $token['base_expr'];
+            }, '');
         }, $tokens['SET']);
 
         $values = array_map(function($token) {
-            $segments = explode('=', $token['base_expr']);
+            $segments = explode('=', $token['base_expr'], 2);
             return Value::create(trim($segments[1]));
         }, $tokens['SET']);
 

@@ -39,7 +39,7 @@ class SelectSingleResultTest extends \PHPUnit\Framework\TestCase {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function create() {
-        $query  = 'SELECT name FROM products WHERE id=1';
+        $query  = 'SELECT `name` FROM products WHERE id=1';
         $parser = new PHPSQLParser();
         $tokens = $parser->parse($query);
 
