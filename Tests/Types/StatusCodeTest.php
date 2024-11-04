@@ -20,6 +20,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Types\StatusCode;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the status code type
@@ -27,40 +31,40 @@ use Circle\DoctrineRestDriver\Types\StatusCode;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\StatusCode
  */
+#[CoversClass(StatusCode::class)]
+#[CoversMethod(StatusCode::class,'create')]
+
 class StatusCodeTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->exactly(2))
             ->method('getStatusCodes')
-            ->will($this->returnValue([202]));
+            ->willReturn([202]);
 
         $this->assertContains(202, StatusCode::create(HttpMethods::POST, $annotation));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithEmptyStatusCode() {
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->once())
             ->method('getStatusCodes')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $this->assertContains(201, StatusCode::create(HttpMethods::POST, $annotation));
     }

@@ -22,6 +22,10 @@ use Circle\DoctrineRestDriver\Annotations\RoutingTable;
 use Circle\DoctrineRestDriver\Annotations\Select;
 use Circle\DoctrineRestDriver\Types\Annotation;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the annotation type
@@ -29,17 +33,18 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Annotation
  */
+#[CoversClass(Annotation::class)]
+#[CoversMethod(Annotation::class,'exists')]
+#[CoversMethod(Annotation::class,'get')]
 class AnnotationTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::exists
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function exists() {
         $routings = new RoutingTable(['products' => 'Circle\DoctrineRestDriver\Tests\Entity\TestEntity']);
 
@@ -48,9 +53,6 @@ class AnnotationTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::get
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */

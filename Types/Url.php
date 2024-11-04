@@ -42,16 +42,22 @@ class Url {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public static function create($route, $apiUrl, $id = null) {
+    public static function create($route, $apiUrl, $id = null,$nameFieldId = 'id') {
         Str::assert($route, 'route');
         Str::assert($apiUrl, 'apiUrl');
         MaybeString::assert($id, 'id');
 
         $idPath = empty($id) ? '' : '/' . $id;
 
+        if (preg_match('/\{' . $nameFieldId . '\}/', $route))
+        {
+            $route = str_replace('{' . $nameFieldId . '}', $id, $route) ;
+            return $apiUrl . '/' . $route ;
+        }
+
         if (!self::is($route))               return $apiUrl . '/' . $route . $idPath;
         if (!preg_match('/\{id\}/', $route)) return $route . $idPath;
-        if (!empty($id))                     return str_replace('{id}', $id, $route);
+        if (!empty($id))                     return $route ;
 
         return str_replace('/{id}', '', $route);
     }
@@ -67,10 +73,16 @@ class Url {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function createFromTokens(array $tokens, $apiUrl, DataSource $annotation = null) {
-        $id    = Identifier::create($tokens);
+        // override ID ?
+        $idName = $annotation?->getOptions()['id'] ?? null ;
+        $id    = Identifier::create($tokens,$idName);
         $route = empty($annotation) || $annotation->getRoute() === null ? Table::create($tokens) : $annotation->getRoute();
 
-        return self::create($route, $apiUrl, $id);
+        if (($annotation) && (isset($annotation->getOptions()['disableIdInUrl']) && $annotation->getOptions()['disableIdInUrl']))
+            $id = null ;
+
+        $nameFieldId = $annotation?->getOptions()['id'] ?? 'id' ;
+        return self::create($route, $apiUrl, $id,$nameFieldId);
     }
 
     /**

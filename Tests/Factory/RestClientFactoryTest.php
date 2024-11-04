@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Factory;
 
 use Circle\DoctrineRestDriver\Factory\RestClientFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the restclient factory
@@ -26,15 +30,13 @@ use Circle\DoctrineRestDriver\Factory\RestClientFactory;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Factory\RestClientFactory
  */
+#[CoversClass(RestClientFactory::class)]
+#[CoversMethod(RestClientFactory::class, 'createOne')]
 class RestClientFactoryTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::createOne
-     */
+    #[Test]
+    #[Group('unit')]
     public function createOne() {
         $factory = new RestClientFactory();
         $this->assertInstanceOf('Circle\RestClientBundle\Services\RestClient', $factory->createOne([]));

@@ -34,6 +34,12 @@ circle_doctrine_rest_driver_mock_delete:
     methods: [ DELETE ]
     condition: "request.getScriptName() == '/app_dev.php'"
 
+circle_doctrine_rest_driver_mock_get_all_categories:
+    path:   /mockapi/categories
+    defaults:  { _controller: Circle\DoctrineRestDriver\Tests\Controller\MockController::getAllCategoriesAction }
+    methods: [ GET ]
+    condition: "request.getScriptName() == '/app_dev.php'"
+
 circle_doctrine_rest_driver_mock_post_association:
     path:   /mockapi/categories
     defaults:  { _controller: Circle\DoctrineRestDriver\Tests\Controller\MockController::postCategoriesAction }

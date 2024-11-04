@@ -44,22 +44,31 @@ class HttpQuery {
         HashMap::assert($tokens, 'tokens');
 
         $operation = SqlOperation::create($tokens);
-        if ($operation !== SqlOperations::SELECT) return null;
 
-        $query = implode('&', array_filter([
+        if (!isset($options['additionalUriArgs']))
+            $options['additionalUriArgs'] = [] ;
+
+        if (is_string($options['additionalUriArgs']))
+            $options['additionalUriArgs'] = [ $options['additionalUriArgs']] ;
+
+        if ($operation !== SqlOperations::SELECT)
+            return implode('&',$options['additionalUriArgs']);
+
+        $query = implode('&', array_filter(array_merge([
             self::createConditionals($tokens),
             self::createPagination($tokens, $options),
-        ]));
+        ],$options['additionalUriArgs']
+        )));
 
         return $query;
     }
 
     /**
      * Create a string of conditional parameters.
-     * 
+     *
      * @param array $tokens
      * @return string
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function createConditionals(array $tokens) {
@@ -75,17 +84,18 @@ class HttpQuery {
             return $query . ($token['expr_type'] == 'const' ? urlencode($baseExpr) : $baseExpr);
         });
 
+        $sqlWhereString = $sqlWhereString ?? '';
         // Remove primary key column before removing table alias and returning
         return str_replace($tableAlias . '.', '', preg_replace('/' . preg_quote($primaryKeyColumn) . '=[\w\d]*&*/', '', $sqlWhereString));
     }
 
     /**
      * Create a string of pagination parameters
-     * 
+     *
      * @param array $tokens
      * @param array $options
      * @return string
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function createPagination(array $tokens, array $options) {

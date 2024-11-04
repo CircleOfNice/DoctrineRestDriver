@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Validation\Exceptions;
 
 use Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the invalid type exception
@@ -26,17 +30,15 @@ use Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
  *
  * @SuppressWarnings("PHPMD.StaticAccess")
  */
+#[CoversClass(InvalidTypeException::class)]
+#[CoversMethod(InvalidTypeException::class,'__construct')]
 class InvalidTypeExceptionTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     */
+    #[Test]
+    #[Group('unit')]
     public function construct() {
         $exception = new InvalidTypeException('string', 'someKey', 'someValue');
         $this->assertSame('The given value someValue for "someKey" is not of type string', $exception->getMessage());

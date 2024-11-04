@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Insert;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the insert annotation
@@ -26,16 +30,14 @@ use Circle\DoctrineRestDriver\Annotations\Insert;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Insert
  */
+#[CoversClass(Insert::class)]
+#[CoversMethod(Insert::class, '__construct')]
+#[CoversMethod(Insert::class, 'getRoute')]
 class InsertTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getRoute
-     */
+    #[Test]
+    #[Group('unit')]
     public function getRoute() {
         $post = new Insert([
             'value' => 'http://www.mySite.com/post'

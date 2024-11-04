@@ -59,8 +59,18 @@ class Table {
 
         $operation = SqlOperation::create($tokens);
         if ($operation === SqlOperations::INSERT) return null;
-        if ($operation === SqlOperations::UPDATE) return $tokens['UPDATE'][0]['alias']['name'];
-        return $tokens['FROM'][0]['alias']['name'];
+
+        if (isset($tokens['UPDATE'][0]['alias']['name']))
+            if ($operation === SqlOperations::UPDATE) return $tokens['UPDATE'][0]['alias']['name'];
+        else
+            return null;
+
+
+        if (isset($tokens['FROM'][0]['alias']['name']))
+            return $tokens['FROM'][0]['alias']['name'];
+        else
+            return null ;
+
     }
 
     /**

@@ -29,7 +29,9 @@ use Circle\DoctrineRestDriver\Types\Result;
 use Circle\DoctrineRestDriver\Types\SqlQuery;
 use Circle\DoctrineRestDriver\Validation\Assertions;
 use Doctrine\DBAL\Driver\Statement as StatementInterface;
+use Doctrine\DBAL\Exception\ServerException;
 
+//use Doctrine\DBAL\Driver\Result as ResultInterface ;
 /**
  * Executes the statement - sends requests to an api
  *
@@ -38,7 +40,7 @@ use Doctrine\DBAL\Driver\Statement as StatementInterface;
  *
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
-class Statement implements \IteratorAggregate, StatementInterface {
+class Statement implements StatementInterface {
 
     /**
      * @var string
@@ -120,6 +122,10 @@ class Statement implements \IteratorAggregate, StatementInterface {
         $this->options      = $options;
     }
 
+    public function getIterator()
+    {
+        return $this->query ;
+    }
     /**
      * {@inheritdoc}
      */
@@ -157,18 +163,31 @@ class Statement implements \IteratorAggregate, StatementInterface {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function execute($params = null) {
+    public function execute($params = null): Result
+    {
         $query   = SqlQuery::setParams($this->query, $params !== null ? $params : $this->params);
-        $request = $this->authStrategy->transformRequest($this->mysqlToRequest->transform($query));
+        $tmp = $this->mysqlToRequest->transform($query) ;
+        $request = $this->authStrategy->transformRequest($tmp);
+
+
+//        dump($request->getUrlAndQuery());
 
         try {
             $response     = $this->restClient->send($request);
-            $result       = new Result($query, $request->getMethod(), $response, $this->options);
+//            dump($response->getContent());
+
+            if ($response->getStatusCode() == 401)
+            {
+                $debug = 1 ;
+
+            }
+            $result       = new Result($query, $request->getMethod(), $response, $this->options,$request);
+
             $this->result = $result->get();
             $this->id     = $result->id();
 
-            return true;
-        } catch(RequestFailedException $e) {
+            return $result ;
+        } catch(RequestFailedException|ServerException $e) {
             // as the error handling proposed by doctrine
             // does not work, we use the way of PDO_mysql
             // which just throws the possible errors
@@ -215,6 +234,9 @@ class Statement implements \IteratorAggregate, StatementInterface {
         $fetchMode = empty($fetchMode) ? $this->fetchMode : $fetchMode;
         Assertions::assertSupportedFetchMode($fetchMode);
 
+        if ($this->result === null)
+            $this->result = [] ;
+
         return count($this->result) === 0 ? false : array_pop($this->result);
     }
 
@@ -226,6 +248,9 @@ class Statement implements \IteratorAggregate, StatementInterface {
         $fetchMode = empty($fetchMode) ? $this->fetchMode : $fetchMode;
 
         while (($row = $this->fetch($fetchMode))) array_push($result, $row);
+
+        if ($this->result === null)
+            $this->result = [] ; // @codeCoverageIgnore
 
         return $result;
     }
@@ -239,12 +264,13 @@ class Statement implements \IteratorAggregate, StatementInterface {
         return Exceptions::MethodNotImplementedException(get_class($this), 'fetchColumn');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator() {
-        return $this->query;
-    }
+
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getIterator() {
+//        return $this->query;
+//    }
 
     /**
      * Returns the last auto incremented id

@@ -26,6 +26,6 @@ namespace Circle\DoctrineRestDriver\Annotations;
  *
  * @Annotation
  */
-class Delete implements DataSource{
+#[\Attribute] class Delete implements DataSource{
     use Route;
 }

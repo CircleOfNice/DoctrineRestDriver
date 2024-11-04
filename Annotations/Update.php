@@ -29,6 +29,6 @@ use Circle\DoctrineRestDriver\Validation\Assertions;
  *
  * @Annotation
  */
-class Update implements DataSource {
+#[\Attribute] class Update implements DataSource {
     use Route;
 }

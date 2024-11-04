@@ -21,8 +21,10 @@ namespace Circle\DoctrineRestDriver;
 use Circle\DoctrineRestDriver\Annotations\RoutingTable;
 use Doctrine\DBAL\Driver as DriverInterface;
 use Doctrine\DBAL\Connection as AbstractConnection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Driver\API\ExceptionConverter;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 
 /**
  * Rest driver class
@@ -36,6 +38,7 @@ class Driver implements DriverInterface {
      * @var Connection
      */
     private $connection;
+    private MetaData $metaData ;
 
     /**
      * {@inheritdoc}
@@ -43,25 +46,35 @@ class Driver implements DriverInterface {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function connect(array $params, $username = null, $password = null, array $driverOptions = array()) {
-        if (!empty($this->connection)) return $this->connection;
+        if (!isset($params['serverVersion']))
+        {
+            throw new (\Exception('serverVersion is required in doctrine config server_version : "X"'));
+        }
 
-        $metaData         = new MetaData();
-        $this->connection = new Connection($params, $this, new RoutingTable($metaData->getEntityNamespaces()));
-        return $this->connection;
+        if (!empty($this->connection)) return $this->connection;
+//        $metaData         = new MetaData();
+        $this->connection = new Connection($params, $this, new RoutingTable($this->metaData->getEntityNamespaces()));
+        return $this->connection->getNativeConnection();
     }
 
     /**
      * {@inheritdoc}
      */
     public function getDatabasePlatform() {
-        return new MySqlPlatform();
+        // get entitymanager if exist
+        $metaData         = new MetaData(); // must be here (maybe construct?)
+        if (!isset($this->metaData))
+            $this->metaData = $metaData;
+        return new MySQLPlatform();
     }
 
     /**
      * {@inheritdoc}
+     * @param AbstractConnection $conn
+     * @param AbstractPlatform $platform
      */
-    public function getSchemaManager(AbstractConnection $conn) {
-        return new MySqlSchemaManager($conn);
+    public function getSchemaManager(AbstractConnection $conn, AbstractPlatform $platform) {
+        return new MySQLSchemaManager($conn,$platform);
     }
 
     /**
@@ -76,5 +89,12 @@ class Driver implements DriverInterface {
      */
     public function getDatabase(AbstractConnection $conn) {
         return 'rest_database';
+    }
+
+    public function getExceptionConverter(): ExceptionConverter
+    {
+        // TODO: Implement getExceptionConverter() method.
+        return new DriverInterface\API\OCI\ExceptionConverter();
+
     }
 }

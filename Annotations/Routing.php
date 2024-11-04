@@ -56,6 +56,8 @@ class Routing {
      */
     private $getAll;
 
+    private $customs ;
+
     /**
      * @var array
      */
@@ -77,9 +79,45 @@ class Routing {
         $reader = new Reader();
         $class  = new \ReflectionClass($namespace);
 
+        // search all customs
+        $this->customs = $reader->readAll($class,DataSource::class);
         foreach (self::$annotations as $alias => $annotation) $this->$alias = $reader->read($class, $annotation);
+
+        // create func
+//        foreach ($this->customs as $custom)
+//        {
+////            $customName = $custom->getMethod();
+////            if ($customName === null)
+//            $customName = $custom::class;
+//            $this->$customName = $custom ;
+//
+//        }
     }
 
+    public function customs()
+    {
+        return $this->customs;
+    }
+    public function __get($name)
+    {
+        if (isset($this->customs[$name]))
+            return $this->customs[$name] ;
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->customs[$name]) ;
+    }
+
+    public function __call($name, $arguments)
+    {
+        if (isset($this->customs[$name]))
+            return $this->customs[$name] ;
+    }
+    public function getCustoms()
+    {
+        return $this->customs ;
+    }
     /**
      * returns the post route
      *

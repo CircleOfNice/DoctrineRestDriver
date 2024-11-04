@@ -1,0 +1,6 @@
+services:
+  Circle\DoctrineRestDriver\Tests\Controller\MockController:
+    class: Circle\DoctrineRestDriver\Tests\Controller\MockController
+    tags: ['controller.service_arguments']
+    calls:
+      - [setContainer, ['@service_container']]

@@ -19,6 +19,9 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Value;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the value type
@@ -26,17 +29,17 @@ use Circle\DoctrineRestDriver\Types\Value;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Value
  */
+#[CoveredClass(Value::class)]
+#[CoversMethod(Value::class,'create')]
 class ValueTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $this->assertSame(1, Value::create('1'));
         $this->assertSame(1.01, Value::create('1.01'));

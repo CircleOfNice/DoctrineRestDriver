@@ -18,7 +18,20 @@
 
 namespace Circle\DoctrineRestDriver\Tests;
 
+use Doctrine\DBAL\Driver\API\ExceptionConverter;
+use Circle\DoctrineRestDriver\DriverConnection;
+use Doctrine\DBAL\Connection as AbstractConnection;
+use Circle\DoctrineRestDriver\Connection;
 use Circle\DoctrineRestDriver\Driver;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Schema\MySQLSchemaManager ;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the driver
@@ -26,9 +39,14 @@ use Circle\DoctrineRestDriver\Driver;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Driver
  */
-class DriverTest extends \PHPUnit\Framework\TestCase {
+#[CoversClass(Driver::class)]
+#[CoversMethod(Driver::class,'getDatabasePlatform')]
+#[CoversMethod(Driver::class,'getSchemaManager')]
+#[CoversMethod(Driver::class,'getName')]
+#[CoversMethod(Driver::class,'getDatabase')]
+#[CoversMethod(Driver::class,'connect')]
+class DriverTest extends TestCase {
 
     /**
      * @var Driver
@@ -38,54 +56,48 @@ class DriverTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp(): void
+    {
         $this->driver = new Driver();
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::getDatabasePlatform
-     */
+    #[Test]
+    #[Group('unit')]
     public function getDatabasePlatform() {
-        $this->assertInstanceOf('Doctrine\DBAL\Platforms\MySqlPlatform', $this->driver->getDatabasePlatform());
+        $this->assertInstanceOf(MySQLPlatform::class, $this->driver->getDatabasePlatform());
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::getSchemaManager
-     */
+    #[Test]
+    #[Group('unit')]
     public function getSchemaManager() {
-        $connection = $this->getMockBuilder('Circle\DoctrineRestDriver\Connection')->disableOriginalConstructor()->getMock();
-        $this->assertInstanceOf('Doctrine\DBAL\Schema\MySqlSchemaManager', $this->driver->getSchemaManager($connection));
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock() ;
+        $platform = $this->getMockBuilder(AbstractPlatform::class)->disableOriginalConstructor()->getMock();
+        $actual =  $this->driver->getSchemaManager($connection,$platform) ;
+        $this->assertInstanceOf(MySQLSchemaManager::class,$actual);
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::getName
-     */
+    #[Test]
+    #[Group('unit')]
     public function getNameTest() {
         $this->assertSame('circle_rest', $this->driver->getName());
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::getDatabase
-     */
+    #[Test]
+    #[Group('unit')]
+    public function getExceptionConverter() {
+        $this->assertInstanceOf(ExceptionConverter::class, $this->driver->getExceptionConverter());
+    }
+
+
+    #[Test]
+    #[Group('unit')]
     public function getDatabase() {
-        $connection = $this->getMockBuilder('Circle\DoctrineRestDriver\Connection')->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock() ;
         $this->assertSame('rest_database', $this->driver->getDatabase($connection));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::connect
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function connect() {
         $params = [
             'driverClass'   => 'Circle\DoctrineRestDriver\Driver',
@@ -97,6 +109,6 @@ class DriverTest extends \PHPUnit\Framework\TestCase {
             'host'     => 'localhost'
         ];
         $connection = $this->driver->connect($params, null, null, $params['driverOptions']);
-        $this->assertInstanceOf('Circle\DoctrineRestDriver\Connection', $connection);
+        $this->assertInstanceOf(DriverConnection::class, $connection);
     }
 }

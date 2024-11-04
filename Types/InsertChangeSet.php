@@ -66,7 +66,11 @@ class InsertChangeSet {
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public static function values(array $tokens) {
-        $values = explode(',', self::removeBrackets(self::removeSpacesBetweenComma(end($tokens['VALUES'])['base_expr'])));
+        $values = [] ;
+
+        foreach (end($tokens['VALUES'])['data'] as $value) {
+            $values[] = $value['base_expr'];
+        }
 
         return array_map(function($value) {
             return Value::create($value);

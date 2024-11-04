@@ -18,7 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  */
-class MockController extends Controller {
+class MockController extends AbstractController {
 
     /**
      * Mock action for testing get
@@ -37,7 +37,9 @@ class MockController extends Controller {
      * @return Response
      */
     public function getAction($id) {
+        if ($id == 500) return new Response('', 500);
         if ($id != 1) return new Response('', 404);
+
 
         return new Response(json_encode([
             'id'                          => 1,
@@ -109,6 +111,48 @@ class MockController extends Controller {
         if ($id != 1) return new Response('', 404);
 
         return new Response('', 204);
+    }
+
+    public function getAllCategoriesAction(Request $request) {
+
+        $result = [
+            [
+                'id'         => 1,
+                'name'       => 'CategMyName',
+                'product_id' => 1,
+            ],
+            [
+                'id'         => 2,
+                'name'       => 'CategNextName',
+                'product_id' => 1,
+            ],
+            [
+                'id'         => 3,
+                'name'       => 'OtherCategMyName',
+                'product_id' => 2,
+            ]
+        ] ;
+
+        $product_id = $request->get('product_id',null);
+
+
+        if ($product_id)
+        {
+            $results = [] ;
+
+            foreach ($result as $r)
+            {
+                if ($r['product_id'] != $product_id)
+                {
+                    $results[] = $r ;
+                }
+
+            }
+
+            $result = $results ;
+
+        }
+        return new Response(json_encode($result),200);
     }
 
     /**

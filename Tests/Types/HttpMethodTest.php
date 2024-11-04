@@ -20,6 +20,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Types\HttpMethod;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the http method type
@@ -27,40 +31,39 @@ use Circle\DoctrineRestDriver\Types\HttpMethod;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\HttpMethod
  */
+#[CoversClass(HttpMethod::class)]
+#[CoversMethod(HttpMethod::class,'create')]
 class HttpMethodTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->exactly(2))
             ->method('getMethod')
-            ->will($this->returnValue(HttpMethods::PUT));
+            ->willReturn(HttpMethods::PUT);
 
         $this->assertSame(HttpMethods::PUT, HttpMethod::create(HttpMethods::POST, $annotation));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithEmptyMethod() {
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->once())
             ->method('getMethod')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $this->assertSame(HttpMethods::POST, HttpMethod::create(HttpMethods::POST, $annotation));
     }

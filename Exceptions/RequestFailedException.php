@@ -18,7 +18,7 @@
 
 namespace Circle\DoctrineRestDriver\Exceptions;
 
-use Doctrine\DBAL\Driver\DriverException;
+use Doctrine\DBAL\Driver\Exception as DriverException;
 use Circle\DoctrineRestDriver\Types\Request;
 
 /**
@@ -37,7 +37,7 @@ class RequestFailedException extends DoctrineRestDriverException implements Driv
      * @var int
      */
     private $errorCode;
-    
+
     /**
      * RequestFailedException constructor
      *

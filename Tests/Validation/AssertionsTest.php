@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Validation;
 
 use Circle\DoctrineRestDriver\Validation\Assertions;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the driver
@@ -26,28 +30,28 @@ use Circle\DoctrineRestDriver\Validation\Assertions;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Validation\Assertions
  */
+#[CoversClass(Assertions::class)]
+#[CoversMethod(Assertions::class,'assertClassExists')]
+#[CoversMethod(Assertions::class,'assertSupportedFetchMode')]
 class AssertionsTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assertClassExists
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assertClassExistsTest() {
         $this->assertSame(null, Assertions::assertClassExists('Circle\DoctrineRestDriver\Tests\Validation\AssertionsTest'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assertSupportedFetchMode
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assertSupportedFetchModeTest() {
         $this->assertSame(\PDO::FETCH_ASSOC, Assertions::assertSupportedFetchMode(\PDO::FETCH_ASSOC));
     }

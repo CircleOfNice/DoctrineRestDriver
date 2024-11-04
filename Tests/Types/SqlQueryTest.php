@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\SqlQuery;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the sql query type
@@ -26,17 +30,19 @@ use Circle\DoctrineRestDriver\Types\SqlQuery;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\SqlQuery
  */
+#[CoversClass(SqlQuery::class)]
+#[CoversMethod(SqlQuery::class,'setParams')]
+#[CoversMethod(SqlQuery::class,'getStringRepresentation')]
+#[CoversMethod(SqlQuery::class,'quoteUrl')]
 class SqlQueryTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::setParams
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function setParams() {
         $query  = 'SELECT name FROM products WHERE id=? AND name=? AND parent = ? AND active = ? AND foo = ? AND cost = ? OR cost = ?';
         $params = [
@@ -53,13 +59,12 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group unit
-     * @covers ::getStringRepresentation
      *
      * @throws \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function getStringRepresentation() {
         $this->assertSame('true', SqlQuery::getStringRepresentation(true));
         $this->assertSame('false', SqlQuery::getStringRepresentation(false));
@@ -71,12 +76,11 @@ class SqlQueryTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::quoteUrl
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function quoteUrl() {
         $query    = 'SELECT name FROM http://www.circle.ai';
         $expected = 'SELECT name FROM "http://www.circle.ai"';

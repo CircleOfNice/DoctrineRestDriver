@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Result;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -27,19 +31,18 @@ use Symfony\Component\HttpFoundation\Response;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Result
  */
+#[CoversClass(Result::class)]
+#[CoversMethod(Result::class,'__construct')]
+#[CoversMethod(Result::class,'get')]
+#[CoversMethod(Result::class,'id')]
 class ResultTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     * @covers ::<private>
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function getWithSelect() {
         $response = new Response(json_encode([
             'name' => 'testname'
@@ -55,14 +58,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     * @covers ::<private>
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function getWithDelete() {
         $response = new Response(json_encode([
             'name' => 'testname'
@@ -74,14 +73,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     * @covers ::<private>
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function getWithInsert() {
         $response = new Response(json_encode([
             'name' => 'testname'
@@ -95,14 +91,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     * @covers ::<private>
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function getWithUpdate() {
         $response = new Response(json_encode([
             'name' => 'testname'
@@ -116,14 +109,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::id
-     * @covers ::<private>
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function id() {
         $response = new Response(json_encode([
             'name' => 'testname',

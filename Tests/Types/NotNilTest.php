@@ -19,6 +19,9 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\NotNil;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the not nil type
@@ -26,17 +29,17 @@ use Circle\DoctrineRestDriver\Types\NotNil;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\NotNil
  */
+#[CoversClass(NotNil::class)]
+#[CoversMethod(NotNil::class,'assert')]
 class NotNilTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $this->assertSame('test', NotNil::assert('test', 'test'));
     }

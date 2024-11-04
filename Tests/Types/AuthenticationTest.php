@@ -19,6 +19,9 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Authentication;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the authentication type
@@ -26,39 +29,38 @@ use Circle\DoctrineRestDriver\Types\Authentication;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Authentication
  */
+#[CoversClass(Authentication::class)]
+#[CoversMethod(Authentication::class, 'create')]
+#[CoversMethod(Authentication::class, 'assert')]
 class AuthenticationTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $this->assertInstanceOf('Circle\DoctrineRestDriver\Security\AuthStrategy', Authentication::create([]));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithOptions() {
         $this->assertInstanceOf('Circle\DoctrineRestDriver\Security\HttpAuthentication', Authentication::create(['driverOptions' => ['authenticator_class' => 'HttpAuthentication']]));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $authStrategy = $this->getMockBuilder('Circle\DoctrineRestDriver\Security\HttpAuthentication')->disableOriginalConstructor()->getMock();
         $this->assertSame($authStrategy, Authentication::assert($authStrategy));

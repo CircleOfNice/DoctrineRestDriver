@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Format;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the format type
@@ -26,39 +30,38 @@ use Circle\DoctrineRestDriver\Types\Format;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Format
  */
+#[CoversClass(Format::class)]
+#[CoversMethod(Format::class,'create')]
+#[CoversMethod(Format::class,'assert')]
 class FormatTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $this->assertInstanceOf('Circle\DoctrineRestDriver\Formatters\Formatter', Format::create([]));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithOptions() {
         $this->assertInstanceOf('Circle\DoctrineRestDriver\Formatters\Json', Format::create(['driverOptions' => ['format' => 'json']]));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $formatter = $this->getMockBuilder('Circle\DoctrineRestDriver\Formatters\Formatter')->getMock();
         $this->assertSame($formatter, Format::assert($formatter));

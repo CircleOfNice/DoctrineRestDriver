@@ -26,27 +26,27 @@ use Doctrine\ORM\Mapping as ORM;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @ORM\Entity
- * @ORM\Table(name="categories")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'categories')]
 class AssociatedEntity {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
+    #[ORM\Column(type: "integer")]
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
      * @var string
      */
+    #[ORM\Column(type: "string", length: 100)]
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Circle\DoctrineRestDriver\Tests\Entity\TestEntity")
      */
+    #[ORM\ManyToOne(targetEntity: "Circle\DoctrineRestDriver\Tests\Entity\TestEntity")]
     protected $product;
 
     /**

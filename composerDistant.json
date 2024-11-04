@@ -1,0 +1,61 @@
+{
+  "name": "circle/doctrine-rest-driver",
+  "description": "Use a REST API as if it was your local database",
+  "type": "library",
+  "version": "3.0.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Circle",
+      "email": "hi@circle.ai"
+    }
+  ],
+  "keywords": [
+    "REST API doctrine ORM DBAL driver"
+  ],
+  "license": [
+    "GPL"
+  ],
+  "require-dev": {
+    "symfony/expression-language": "^3.0",
+    "phpmd/phpmd" : "@stable",
+    "phpunit/phpunit" : "@stable",
+    "symfony/yaml": "3.*",
+    "sensio/framework-extra-bundle": "3.*",
+    "symfony/framework-bundle": "3.*",
+    "doctrine/doctrine-bundle": "^1.6",
+    "symfony/validator": "3.*"
+  },
+  "autoload": {
+    "psr-0": {
+      "Circle\\DoctrineRestDriver": ""
+    },
+    "files": [
+      "Annotations/Delete.php",
+      "Annotations/Fetch.php",
+      "Annotations/Insert.php",
+      "Annotations/Select.php",
+      "Annotations/Update.php"
+    ]
+  },
+  "target-dir": "Circle/DoctrineRestDriver",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.0.0-dev"
+    }
+  },
+  "require": {
+    "php": ">=5.5",
+    "doctrine/dbal": "^3",
+    "greenlion/php-sql-parser": "^4.0",
+    "doctrine/orm": "^3",
+    "ci/restclientbundle": "^3"
+  },
+  "repositories": [
+    {
+      "url": "https://github.com/davidnurdin/CiRestClientBundle.git",
+      "type": "git"
+    }
+  ]
+}

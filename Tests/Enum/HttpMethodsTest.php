@@ -20,6 +20,12 @@ namespace Circle\DoctrineRestDriver\Tests\Enums;
 
 use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Enums\SqlOperations;
+use Circle\DoctrineRestDriver\Exceptions\InvalidSqlOperationException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the http methods enum
@@ -27,18 +33,17 @@ use Circle\DoctrineRestDriver\Enums\SqlOperations;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Enums\HttpMethods
  */
+#[CoversMethod(HttpMethods::class,'ofSqlOperation')]
 class HttpMethodsTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::ofSqlOperation
-     * @expectedException \Exception
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
+     * @throws InvalidSqlOperationException
      */
+    #[Test]
+    #[Group('unit')]
     public function ofSqlOperation() {
         $this->assertEquals(HttpMethods::GET, HttpMethods::ofSqlOperation(SqlOperations::SELECT));
         $this->assertEquals(HttpMethods::PUT, HttpMethods::ofSqlOperation(SqlOperations::UPDATE));
@@ -46,6 +51,8 @@ class HttpMethodsTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(HttpMethods::POST, HttpMethods::ofSqlOperation(SqlOperations::INSERT));
         $this->assertEquals(HttpMethods::PATCH, HttpMethods::ofSqlOperation(SqlOperations::UPDATE, true));
 
+        $this->expectException(\Exception::class);
         HttpMethods::ofSqlOperation('invalid');
+
     }
 }

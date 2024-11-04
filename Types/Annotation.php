@@ -38,6 +38,10 @@ class Annotation {
      * @return DataSource|null
      */
     public static function get(RoutingTable $annotations, $entityAlias, $method) {
+
+        // check if custom
+        $debug = 1 ;
+
         if (!self::exists($annotations, $entityAlias, $method)) return null;
 
         return $annotations->get($entityAlias)->$method();

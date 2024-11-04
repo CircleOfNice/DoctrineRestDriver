@@ -21,6 +21,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 use Circle\DoctrineRestDriver\Types\SelectAllResult;
 use Circle\DoctrineRestDriver\Types\SelectSingleResult;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the select all result type
@@ -28,17 +32,19 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\SelectAllResult
  */
+#[CoversClass(SelectAllResult::class)]
+#[CoversMethod(SelectAllResult::class,'create')]
+#[CoversMethod(SelectAllResult::class,'orderBy')]
+
 class SelectAllResultTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $query  = 'SELECT name FROM products';
         $parser = new PHPSQLParser();
@@ -66,13 +72,11 @@ class SelectAllResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
-     * @covers ::orderBy
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function selectAllOrderBy() {
         $query  = 'SELECT name FROM products ORDER BY name';
         $parser = new PHPSQLParser();

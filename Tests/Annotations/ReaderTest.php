@@ -20,7 +20,13 @@ namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Reader;
 use Circle\DoctrineRestDriver\Annotations\Select;
+use Circle\DoctrineRestDriver\Tests\Entity\TestEntity;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+use ReflectionClass;
 
 /**
  * Tests the annotation reader
@@ -28,8 +34,10 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Reader
  */
+#[CoversClass(Reader::class)]
+#[CoversMethod(Reader::class, '__construct')]
+#[CoversMethod(Reader::class, 'read')]
 class ReaderTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -37,34 +45,21 @@ class ReaderTest extends \PHPUnit\Framework\TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function setUp() {
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Entity.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Table.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Column.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Id.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/GeneratedValue.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/OneToMany.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/ManyToOne.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Insert.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Update.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Select.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Delete.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Fetch.php');
+    public function setUp(): void
+    {
+
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::read
-     */
+    #[Test]
+    #[Group('unit')]
     public function getRoute() {
         $reader   = new Reader();
-        $class    = new \ReflectionClass('Circle\DoctrineRestDriver\Tests\Entity\TestEntity');
+        $class    = new ReflectionClass(TestEntity::class);
         $expected = new Select([
             'value' => 'http://127.0.0.1:3000/app_dev.php/mockapi/products'
         ]);
 
-        $this->assertEquals($expected, $reader->read($class, 'Circle\DoctrineRestDriver\Annotations\Select'));
+        $actual = $reader->read($class, Select::class) ;
+        $this->assertEquals($expected, $actual);
     }
 }

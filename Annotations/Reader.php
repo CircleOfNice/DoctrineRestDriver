@@ -19,6 +19,11 @@
 namespace Circle\DoctrineRestDriver\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\Mapping\Driver\AttributeReader;
+use Doctrine\ORM\Mapping\Driver\RepeatableAttributeCollection;
+use Doctrine\ORM\Mapping\MappingAttribute;
+use ReflectionAttribute;
+use ReflectionClass;
 
 /**
  * Reads annotations
@@ -32,12 +37,15 @@ class Reader {
      * @var AnnotationReader
      */
     private $annotationReader;
+    private $attributeReader ;
+
 
     /**
      * Reader constructor.
      */
     public function __construct() {
-        $this->annotationReader = new AnnotationReader();
+//        $this->annotationReader = new AnnotationReader();
+        $this->attributeReader = new AttributeReader() ;
     }
 
     /**
@@ -48,8 +56,74 @@ class Reader {
      * @return null|string
      */
     public function read(\ReflectionClass $class, $namespace) {
-        $annotation = $this->annotationReader->getClassAnnotation($class, $namespace);
 
-        return $annotation instanceof $namespace ? $annotation : null;
+        $attributes = $this->getClassAttributes($class);
+
+        foreach ($attributes as $attribute)
+        {
+            if ($attribute instanceof $namespace)
+                return $attribute ;
+        }
+
+        // get inherited annotations
+        $parent = $class->getParentClass();
+        if ($parent !== false) {
+            return $this->read($parent, $namespace);
+        }
+
+
+        return null ; // @codeCoverageIgnore
+
+//        $annotation = $this->annotationReader->getClassAnnotation($class, $namespace);
+//        return $attributes instanceof $namespace ? $attributes : null;
+//        return $annotation instanceof $namespace ? $annotation : null;
+    }
+
+    public function readAll(\ReflectionClass $class, $namespace) {
+
+        $attributes = $this->getClassAttributes($class);
+
+        $return = [] ;
+
+        foreach ($attributes as $attribute)
+        {
+            if ($attribute instanceof $namespace) {
+                if (!str_starts_with($attribute::class,__NAMESPACE__))
+                    $return[$attribute::class] = $attribute;
+            }
+        }
+
+        return $return ;
+
+    }
+
+    /**
+     * @psalm-return class-string-map<T, T|RepeatableAttributeCollection<T>>
+     *
+     * @template T of MappingAttribute
+     */
+    public function getClassAttributes(ReflectionClass $class): array
+    {
+        return $this->convertToAttributeInstances($class->getAttributes());
+    }
+
+    /**
+     * @param array<ReflectionAttribute> $attributes
+     *
+     * @return class-string-map<T, T|RepeatableAttributeCollection<T>>
+     *
+     * @template T of MappingAttribute
+     */
+    private function convertToAttributeInstances(array $attributes): array
+    {
+        $instances = [];
+
+        foreach ($attributes as $attribute) {
+            $attributeName = $attribute->getName();
+            $instance = $attribute->newInstance();
+            $instances[$attributeName] = $instance;
+        }
+
+        return $instances;
     }
 }

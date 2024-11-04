@@ -18,6 +18,9 @@
 
 namespace Circle\DoctrineRestDriver\Factory;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Query;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\Driver\DriverException as DriverExceptionInterface;
 use Doctrine\DBAL\Exception as DBALException;
@@ -32,25 +35,27 @@ class ResponseExceptionFactory
     /**
      * Handle a failed response by creating a specific exception for the given
      * response.
-     * 
+     *
      * @param Response $response
      * @param DriverExceptionInterface $exception
      * @return DriverException
      */
-    public function createDbalException(Response $response, DriverExceptionInterface $exception) {
+    public function createDbalException(Response $response, $exception) {
+        /** @var $exception Exception */
+
         switch ($response->getStatusCode()) {
             case Response::HTTP_BAD_REQUEST:
-                return new DBALException\SyntaxErrorException($response->getContent(), $exception);
+                return new DBALException\SyntaxErrorException($exception,null);
 
             case Response::HTTP_METHOD_NOT_ALLOWED:
             case Response::HTTP_NOT_ACCEPTABLE:
             case Response::HTTP_REQUEST_TIMEOUT:
             case Response::HTTP_LENGTH_REQUIRED:
             case Response::HTTP_INTERNAL_SERVER_ERROR:
-                return new DBALException\ServerException($response->getContent(), $exception);
-            
+                return new DBALException\ServerException($exception,null);
+
             case Response::HTTP_CONFLICT:
-                return new DBALException\ConstraintViolationException($response->getContent(), $exception);
+                return new DBALException\ConstraintViolationException($exception,null);
 
             case Response::HTTP_UNAUTHORIZED:
             case Response::HTTP_FORBIDDEN:
@@ -58,10 +63,10 @@ class ResponseExceptionFactory
             case Response::HTTP_BAD_GATEWAY:
             case Response::HTTP_SERVICE_UNAVAILABLE:
             case Response::HTTP_GATEWAY_TIMEOUT:
-                return new DBALException\ConnectionException($response->getContent(), $exception);
+                return new DBALException\ConnectionException($exception,null);
 
             default:
-                return new DBALException\DriverException($response->getContent(), $exception);
+                return new DBALException\DriverException( $exception,null);
         }
     }
 }

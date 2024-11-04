@@ -29,35 +29,35 @@ use Circle\DoctrineRestDriver\Annotations as DataSource;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @ORM\Entity
- * @ORM\Table(name="products")
- * @DataSource\Select("http://127.0.0.1:3000/app_dev.php/mockapi/products")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'products')]
+#[DataSource\Select("http://127.0.0.1:3000/app_dev.php/mockapi/products")]
 class TestEntity {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
+    #[ORM\Column(type: "integer")]
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
      * @var string
      */
+    #[ORM\Column(type: "string", length: 100)]
     protected $name;
 
     /**
-     * @ORM\Column(type="string", length=100)
      * @var string
      */
+    #[ORM\Column(type: "string", length: 100)]
     protected $value;
 
     /**
-     * @ORM\OneToMany(targetEntity="Circle\DoctrineRestDriver\Tests\Entity\AssociatedEntity", mappedBy="product")
      * @var ArrayCollection
      */
+    #[ORM\OneToMany(targetEntity: "Circle\DoctrineRestDriver\Tests\Entity\AssociatedEntity", mappedBy: "product")]
     protected $categories;
 
     /**

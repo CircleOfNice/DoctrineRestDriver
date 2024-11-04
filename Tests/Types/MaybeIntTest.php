@@ -19,6 +19,11 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\MaybeInt;
+use Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the maybe int type
@@ -26,31 +31,30 @@ use Circle\DoctrineRestDriver\Types\MaybeInt;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\MaybeInt
  */
+#[CoversClass(MaybeInt::class)]
+#[CoversMethod(MaybeInt::class,'assert')]
 class MaybeIntTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $this->assertSame(1, MaybeInt::assert(1, 'test'));
         $this->assertSame(null, MaybeInt::assert(null, 'test'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
-     * @expectedException \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
+    #[Test]
+    #[Group('unit')]
     public function assertOnException() {
+        $this->expectException(InvalidTypeException::class);
         MaybeInt::assert([], 'array');
     }
 }

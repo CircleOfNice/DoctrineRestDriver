@@ -19,6 +19,11 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Str;
+use Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the string type
@@ -26,30 +31,28 @@ use Circle\DoctrineRestDriver\Types\Str;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Str
  */
+#[CoversClass(Str::class)]
+#[CoversMethod(Str::class,'assert')]
 class StrTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $this->assertSame('test', Str::assert('test', 'test'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
-     * @expectedException \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
+    #[Test]
+    #[Group('unit')]
     public function assertOnException() {
+        $this->expectException(InvalidTypeException::class);
         Str::assert([], 'array');
     }
 }

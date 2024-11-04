@@ -21,6 +21,10 @@ namespace Circle\DoctrineRestDriver\Tests\Factory;
 use Circle\DoctrineRestDriver\Factory\RequestFactory;
 use Circle\DoctrineRestDriver\Types\Request;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the restclient factory
@@ -28,8 +32,9 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Factory\RequestFactory
  */
+#[CoversClass(RequestFactory::class)]
+#[CoversMethod(RequestFactory::class, 'createOne')]
 class RequestFactoryTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -61,11 +66,8 @@ class RequestFactoryTest extends \PHPUnit\Framework\TestCase {
         ]
     ];
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::createOne
-     */
+    #[Test]
+    #[Group('unit')]
     public function createOne() {
         $query    = 'SELECT name FROM products t0 WHERE t0.id=1';
         $parser   = new PHPSQLParser();
@@ -81,12 +83,9 @@ class RequestFactoryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($expected, $factory->createOne('get', $parser->parse($query), $this->factoryOptions, $routings));
     }
-    
-    /**
-     * @test
-     * @group  unit
-     * @covers ::createOne
-     */
+
+    #[Test]
+    #[Group('unit')]
     public function createOneWithPaginationHeadersDefault() {
         $query    = 'SELECT name FROM products WHERE LIMIT 5 OFFSET 10';
         $parser   = new PHPSQLParser();
@@ -105,12 +104,9 @@ class RequestFactoryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($expected, $factory->createOne('get', $parser->parse($query), $this->factoryOptions, $routings));
     }
-    
-    /**
-     * @test
-     * @group  unit
-     * @covers ::createOne
-     */
+
+    #[Test]
+    #[Group('unit')]
     public function createWithPaginationParameters() {
         $query    = 'SELECT name FROM products WHERE LIMIT 5 OFFSET 10';
         $parser   = new PHPSQLParser();

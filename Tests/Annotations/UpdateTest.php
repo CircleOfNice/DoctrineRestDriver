@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Update;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the update annotation
@@ -26,16 +30,14 @@ use Circle\DoctrineRestDriver\Annotations\Update;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Update
  */
+#[CoversClass(Update::class)]
+#[CoversMethod(Update::class, '__construct')]
+#[CoversMethod(Update::class, 'getRoute')]
 class UpdateTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getRoute
-     */
+    #[Test]
+    #[Group('unit')]
     public function getRoute() {
         $put = new Update([
             'value' => 'http://www.mySite.com/put'

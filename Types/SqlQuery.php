@@ -44,6 +44,9 @@ class SqlQuery {
         Str::assert($query, 'query');
 
         return array_reduce($params, function($query, $param) {
+            if (is_string($param))
+                $param = addslashes($param);
+
             $param = self::getStringRepresentation($param);
 
             return strpos($query, '?') ? substr_replace($query, $param, strpos($query, '?'), strlen('?')) : $query;

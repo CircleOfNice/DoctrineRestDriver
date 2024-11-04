@@ -20,6 +20,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\SelectResult;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the select result type
@@ -27,17 +31,17 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\SelectResult
  */
+#[CoversClass(SelectResult::class)]
+#[CoversMethod(SelectResult::class,'create')]
 class SelectResultTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createSingle() {
         $query  = 'SELECT name FROM products WHERE id=1';
         $parser = new PHPSQLParser();
@@ -57,12 +61,11 @@ class SelectResultTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createAll() {
         $query  = 'SELECT name FROM products';
         $parser = new PHPSQLParser();

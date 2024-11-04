@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Fetch;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the fetch annotation
@@ -26,16 +30,14 @@ use Circle\DoctrineRestDriver\Annotations\Fetch;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Fetch
  */
+#[CoversClass(Fetch::class)]
+#[CoversMethod(Fetch::class,'__construct')]
+#[CoversMethod(Fetch::class,'getRoute')]
 class FetchTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getRoute
-     */
+    #[Test]
+    #[Group('unit')]
     public function getRoute() {
         $getAll = new Fetch([
             'value' => 'http://www.mySite.com/getAll'

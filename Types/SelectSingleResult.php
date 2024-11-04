@@ -36,16 +36,22 @@ class SelectSingleResult {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public static function create(array $tokens, $content) {
+    public static function create(array $tokens, $content,$joinTable = null) {
+
+
+        // Suceptible d'etre lancé plusieur fois par selectAllResult , pour chaque table associé (en leftjoin)
+
         HashMap::assert($tokens, 'tokens');
         $tableAlias = Table::alias($tokens);
 
-        $attributeValueMap = array_map(function($token) use ($content, $tableAlias) {
+        $attributeValueMap = array_map(function($token) use ($content, $tableAlias,$tokens,$joinTable) {
             $key   = empty($token['alias']['name']) ? $token['base_expr'] : $token['alias']['name'];
             $value = $content[str_replace($tableAlias . '.', '', $token['base_expr'])];
             return [$key => $value];
         }, $tokens['SELECT']);
 
-        return [ array_reduce($attributeValueMap, 'array_merge', []) ];
+        return [
+            array_reduce($attributeValueMap, 'array_merge', [])
+        ];
     }
 }

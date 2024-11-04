@@ -26,23 +26,23 @@ use Doctrine\ORM\Mapping as ORM;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @ORM\Entity
- * @ORM\Table(name="nonImplemented")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "nonImplemented")]
 class NonImplementedEntity {
 
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
+    #[ORM\Column(type: "integer")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
      * @var string
      */
+    #[ORM\Column(type: "string", length: 100)]
     protected $name;
 
     /**

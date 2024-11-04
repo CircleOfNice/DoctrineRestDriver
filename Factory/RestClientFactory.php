@@ -34,10 +34,11 @@ class RestClientFactory {
     /**
      * Creates a new RestClient with the given options
      *
-     * @param  array      $curlOptions
+     * @param array $curlOptions
      * @return RestClient
      */
     public function createOne(array $curlOptions) {
+//        return new HttpClient()
         return new RestClient(new Curl(new CurlOptionsHandler($curlOptions)));
     }
 }

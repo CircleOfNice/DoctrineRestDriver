@@ -21,6 +21,10 @@ namespace Circle\DoctrineRestDriver\Tests\Security;
 use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Security\NoAuthentication;
 use Circle\DoctrineRestDriver\Types\Request;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the result mapping
@@ -28,8 +32,9 @@ use Circle\DoctrineRestDriver\Types\Request;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Security\NoAuthentication
  */
+#[CoversClass(NoAuthentication::class)]
+#[CoversMethod(NoAuthentication::class, 'transformRequest')]
 class NoAuthenticationTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -40,7 +45,7 @@ class NoAuthenticationTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->authentication = new NoAuthentication([
             'host'          => 'http://circle.ai',
             'user'          => 'Aladdin',
@@ -49,11 +54,8 @@ class NoAuthenticationTest extends \PHPUnit\Framework\TestCase {
         ]);
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::transformRequest
-     */
+    #[Test]
+    #[Group('unit')]
     public function transformRequest() {
         $expectedOptions = [];
 

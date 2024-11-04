@@ -20,14 +20,20 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\PaginationHeaders;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+
 /**
  * Tests pagination headers
  *
  * @author    Djane Rey Mabelin <thedjaney@gmail.com>
  * @copyright 2016
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\PaginationHeaders
  */
+#[CoversClass(PaginationHeaders::class)]
+#[CoversMethod(PaginationHeaders::class,'create')]
 class PaginationHeadersTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -43,7 +49,7 @@ class PaginationHeadersTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->options = [
             'security_strategy'  => 'none',
             'CURLOPT_MAXREDIRS'  => 22,
@@ -57,12 +63,10 @@ class PaginationHeadersTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $query  = 'SELECT name FROM products LIMIT 10, 10';
         $parser = new PHPSQLParser();

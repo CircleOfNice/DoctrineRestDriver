@@ -21,6 +21,10 @@ namespace Circle\DoctrineRestDriver\Tests\Annotations;
 use Circle\DoctrineRestDriver\Annotations\Routing;
 use Circle\DoctrineRestDriver\Annotations\RoutingTable;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the routing table
@@ -28,8 +32,11 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\RoutingTable
  */
+#[CoversClass(RoutingTable::class)]
+#[CoversMethod(RoutingTable::class,'__construct')]
+#[CoversMethod(RoutingTable::class,'get')]
+//#[CoversMethod(RoutingTable::class,'<private>')]
 class RoutingTableTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -37,28 +44,24 @@ class RoutingTableTest extends \PHPUnit\Framework\TestCase {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function setUp() {
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Entity.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Table.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Column.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Id.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/GeneratedValue.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/OneToMany.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/ManyToOne.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Insert.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Update.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Select.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Delete.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Fetch.php');
+    public function setUp(): void
+    {
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Entity.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Table.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Column.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Id.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/GeneratedValue.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/OneToMany.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/ManyToOne.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Insert.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Update.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Select.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Delete.php');
+//        AnnotationRegistry::registerFile(__DIR__ . '/../../Annotations/Fetch.php');
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function get() {
         $entities = [
             'categories'     => 'Circle\DoctrineRestDriver\Tests\Entity\AssociatedEntity',

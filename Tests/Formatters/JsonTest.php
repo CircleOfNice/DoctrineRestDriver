@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Formatters;
 
 use Circle\DoctrineRestDriver\Formatters\Json;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the json formatter
@@ -26,29 +30,29 @@ use Circle\DoctrineRestDriver\Formatters\Json;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Formatters\Json
  */
+#[CoversClass(Json::class)]
+#[CoversMethod(Json::class, 'encode')]
+#[CoversMethod(Json::class, 'decode')]
 class JsonTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::encode
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function encode() {
         $json = new Json();
         $this->assertSame('{"test":"test"}', $json->encode(['test' => 'test']));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::decode
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function decode() {
         $json = new Json();
         $this->assertEquals(['test' => 'test'], $json->decode('{"test": "test"}'));

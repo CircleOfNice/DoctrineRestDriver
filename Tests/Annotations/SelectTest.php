@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Select;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the select annotation
@@ -26,16 +30,14 @@ use Circle\DoctrineRestDriver\Annotations\Select;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Select
  */
+#[CoversClass(Select::class)]
+#[CoversMethod(Select::class, '__construct')]
+#[CoversMethod(Select::class, 'getRoute')]
 class SelectTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getRoute
-     */
+    #[Test]
+    #[Group('unit')]
     public function getRoute() {
         $get = new Select([
             'value' => 'http://www.mySite.com/get'

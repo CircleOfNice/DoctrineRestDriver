@@ -20,14 +20,20 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\OrderingHeaders;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+
 /**
  * Tests ordering headers
  *
  * @author    Djane Rey Mabelin <thedjaney@gmail.com>
  * @copyright 2016
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\OrderingHeaders
  */
+#[CoversClass(OrderingHeaders::class)]
+#[CoversMethod(OrderingHeaders::class,'create')]
 class OrderingHeadersTest extends \PHPUnit\Framework\TestCase {
 
 
@@ -39,19 +45,18 @@ class OrderingHeadersTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->expected = [
             'Order: name ASC',
         ];
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $query  = 'SELECT name FROM products a ORDER BY name ASC';
         $parser = new PHPSQLParser();

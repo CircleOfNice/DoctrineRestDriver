@@ -19,7 +19,12 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Url;
+use Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the url type
@@ -27,102 +32,98 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Url
  */
+#[CoversClass(Url::class)]
+#[CoversMethod(Url::class,'create')]
+#[CoversMethod(Url::class,'createFromTokens')]
+#[CoversMethod(Url::class,'is')]
+#[CoversMethod(Url::class,'assert')]
 class UrlTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $this->assertSame('http://circle.ai/products/1', Url::create('products', 'http://circle.ai', '1'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithUrl() {
         $this->assertSame('http://www.circle.ai/products/1', Url::create('http://www.circle.ai/products/{id}', 'http://circle.ai', '1'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithUrlWithoutSetId() {
         $this->assertSame('http://www.circle.ai/products', Url::create('http://www.circle.ai/products/{id}', 'http://circle.ai'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithoutAnyId() {
         $this->assertSame('http://www.circle.ai/products/1', Url::create('http://www.circle.ai/products', 'http://circle.ai', '1'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::createFromTokens
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createFromTokens() {
         $tokens     = (new PHPSQLParser())->parse('SELECT name FROM products WHERE id=1');
         $annotation = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\DataSource')->getMock();
         $annotation
             ->expects($this->exactly(2))
             ->method('getRoute')
-            ->will($this->returnValue('http://circle.ai/products/{id}'));
+            ->willReturn('http://circle.ai/products/{id}');
 
         $this->assertSame('http://circle.ai/products/1', Url::createFromTokens($tokens, 'http://circle.ai', $annotation));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::is
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function isTest() {
         $this->assertTrue(Url::is('http://www.circle.ai'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::is
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function isUrlLocalhostTest() {
         $this->assertTrue(Url::is('http://localhost:3000'));
         $this->assertTrue(Url::is('http://localhost:3000/api?filter=true'));
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::is
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function isNoUrlTest() {
         $this->assertFalse(Url::is('http:/localhost:3000'));
         $this->assertFalse(Url::is('localhost:3000'));
@@ -132,12 +133,11 @@ class UrlTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $this->assertSame('http://www.test.com', Url::assert('http://www.test.com', 'Url'));
         $this->assertSame('http://www.test.com?filter=1', Url::assert('http://www.test.com?filter=1', 'Url'));
@@ -146,14 +146,13 @@ class UrlTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
-     * @expectedException \Circle\DoctrineRestDriver\Validation\Exceptions\InvalidTypeException
      */
+    #[Test]
+    #[Group('unit')]
     public function assertUrlOnException() {
+        $this->expectException(InvalidTypeException::class);
         Url::assert('localhost:3000', 'Url');
     }
 }

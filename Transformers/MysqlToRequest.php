@@ -82,9 +82,35 @@ class MysqlToRequest {
      */
     public function transform($query) {
         $usePatch = isset($this->options['driverOptions']['use_patch']) ? $this->options['driverOptions']['use_patch'] : false;
-        
+
         $tokens     = $this->parser->parse($query);
         $method     = HttpMethods::ofSqlOperation(SqlOperation::create($tokens), $usePatch);
+        // Customs Method
+
+//        if ($tokens['SET'])
+//            if (isset($tokens['SET'][0]))
+
+        $customs = Annotation::get($this->routings, Table::create($tokens),'customs') ;
+        $annotation = null ;
+
+        // TODO : proprement.
+
+        if ($customs) {
+            foreach ($customs as $custom) {
+                if (isset($tokens['SET'][0]['sub_tree'][2]['base_expr'])) {
+                    $classTest = ($custom::$functionClass);
+                    $classTest = new $classTest('');
+
+                    if ($tokens['SET'][0]['sub_tree'][2]['base_expr'] == $classTest::$functionName) {
+                        //                $annotation = Annotation::get($this->routings, Table::create($tokens), 'FLAG');
+                        $annotation = Annotation::get($this->routings, Table::create($tokens), $custom::class);
+                    }
+                }
+            }
+        }
+
+
+        if (!$annotation)
         $annotation = Annotation::get($this->routings, Table::create($tokens), $method);
 
         return $this->requestFactory->createOne($method, $tokens, $this->options, $annotation);

@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Validation\Exceptions;
 
 use Circle\DoctrineRestDriver\Validation\Exceptions\NotNilException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the invalid type exception
@@ -26,17 +30,15 @@ use Circle\DoctrineRestDriver\Validation\Exceptions\NotNilException;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Validation\Exceptions\NotNilException
  *
  * @SuppressWarnings("PHPMD.StaticAccess")
  */
+#[CoversClass(NotNilException::class)]
+#[CoversMethod(NotNilException::class,'__construct')]
 class NotNilExceptionTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     */
+    #[Test]
+    #[Group('unit')]
     public function construct() {
         $exception = new NotNilException('someVar');
         $this->assertSame('someVar must not be null', $exception->getMessage());

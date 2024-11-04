@@ -24,6 +24,10 @@ use Circle\DoctrineRestDriver\Annotations\Fetch;
 use Circle\DoctrineRestDriver\Annotations\Insert;
 use Circle\DoctrineRestDriver\Annotations\Update;
 use Circle\DoctrineRestDriver\Annotations\Routing;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the routing bag
@@ -31,73 +35,57 @@ use Circle\DoctrineRestDriver\Annotations\Routing;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Routing
  */
+#[CoversClass(Routing::class)]
+#[CoversMethod(Routing::class, '__construct')]
+#[CoversMethod(Routing::class, 'post')]
+#[CoversMethod(Routing::class, 'put')]
+#[CoversMethod(Routing::class, 'patch')]
+#[CoversMethod(Routing::class, 'get')]
+#[CoversMethod(Routing::class, 'delete')]
+#[CoversMethod(Routing::class, 'getAll')]
 class RoutingTest extends \PHPUnit\Framework\TestCase {
+
+    public Routing $routing;
 
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp(): void
+    {
         $this->routing = new Routing('Circle\DoctrineRestDriver\Tests\Entity\AssociatedEntity');
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::post
-     */
+    #[Test]
+    #[Group('unit')]
     public function post() {
         $this->assertSame(null, $this->routing->post());
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::put
-     */
+    #[Test]
+    #[Group('unit')]
     public function put() {
         $this->assertSame(null, $this->routing->put());
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::patch
-     */
+    #[Test]
+    #[Group('unit')]
     public function patch() {
         $this->assertSame(null, $this->routing->patch());
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::get
-     */
+    #[Test]
+    #[Group('unit')]
     public function get() {
         $this->assertSame(null, $this->routing->get());
     }
-
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::delete
-     */
+    #[Test]
+    #[Group('unit')]
     public function delete() {
         $this->assertSame(null, $this->routing->delete());
     }
-
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getAll
-     */
+    #[Test]
+    #[Group('unit')]
     public function getAll() {
         $this->assertSame(null, $this->routing->getAll());
     }

@@ -20,6 +20,9 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\HttpQuery;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the http query type
@@ -27,17 +30,17 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\HttpQuery
  */
+#[CoversClass(HttpQuery::class)]
+#[CoversMethod(HttpQuery::class,'create')]
 class HttpQueryTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $parser   = new PHPSQLParser();
         $tokens   = $parser->parse('SELECT name FROM products t0 WHERE t0.id=1 AND t0.value="testvalue" AND t0.name="testname"');
@@ -45,14 +48,13 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertSame($expected, HttpQuery::create($tokens));
     }
-    
+
     /**
-     * @test
-     * @group unit
-     * @covers ::create
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithoutPaginationIsDefault() {
         $parser   = new PHPSQLParser();
         $tokens   = $parser->parse('SELECT name FROM products WHERE foo="bar" LIMIT 5 OFFSET 15');
@@ -60,14 +62,13 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertSame($expected, HttpQuery::create($tokens));
     }
-    
+
     /**
-     * @test
-     * @group unit
-     * @covers ::create
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithPagination() {
         $options = [
             'pagination_as_query' => true,
@@ -78,14 +79,13 @@ class HttpQueryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertSame($expected, HttpQuery::create($tokens, $options));
     }
-    
+
     /**
-     * @test
-     * @group unit
-     * @covers ::create
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithCustomPagination() {
         $options = [
             'pagination_as_query' => true,

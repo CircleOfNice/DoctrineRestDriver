@@ -20,6 +20,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\UpdateChangeSet;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the UpdateChangeSet type
@@ -27,17 +31,17 @@ use PHPSQLParser\PHPSQLParser;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\UpdateChangeSet
  */
+#[CoversClass(UpdateChangeSet::class)]
+#[CoversMethod(UpdateChangeSet::class,'create')]
 class UpdateChangeSetTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $parser   = new PHPSQLParser();
         $tokens   = $parser->parse('UPDATE products set name="testname", value="testvalue" WHERE id=1');
@@ -48,14 +52,13 @@ class UpdateChangeSetTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertSame($expected, UpdateChangeSet::create($tokens));
     }
-    
+
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createRemovesWhitespace() {
         $parser   = new PHPSQLParser();
         $tokens   = $parser->parse('UPDATE products set name = "testname", value = "testvalue" WHERE id = 1');

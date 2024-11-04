@@ -22,6 +22,9 @@ use Circle\DoctrineRestDriver\Annotations\RoutingTable;
 use Circle\DoctrineRestDriver\Transformers\MysqlToRequest;
 use Circle\DoctrineRestDriver\Types\CurlOptions;
 use Circle\DoctrineRestDriver\Types\Request;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the mysql to request transformer
@@ -32,6 +35,9 @@ use Circle\DoctrineRestDriver\Types\Request;
  * @coversDefaultClass Circle\DoctrineRestDriver\Transformers\MysqlToRequest
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
+#[CoversMethod(MysqlToRequest::class,'__construct')]
+#[CoversMethod(MysqlToRequest::class,'transform')]
+//#[CoversMethod(MysqlToRequest::class,'<private>')]
 class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -61,20 +67,20 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->routings = $this->getMockBuilder('Circle\DoctrineRestDriver\Annotations\RoutingTable')->disableOriginalConstructor()->getMock();
         $this->routings
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
     }
-    
+
     /**
      * Create a MysqlToRequest instance with the given options.
-     * 
+     *
      * @param array $optionsOverride
      * @return MysqlToRequest
-     * 
+     *
      * @author Rob Treacy <email@roberttreacy.com>
      */
     private function createMysqlToRequest($optionsOverride = []) {
@@ -90,17 +96,12 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
                     'CURLOPT_FOLLOWLOCATION' => true,
                 ]
             ], $optionsOverride);
-        
+
         return new MysqlToRequest($options, $this->routings);
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function selectOne() {
         $query    = 'SELECT name FROM products t0 WHERE t0.id = 1';
         $expected = new Request([
@@ -113,13 +114,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function selectOneBy() {
         $query    = 'SELECT name FROM products t0 WHERE t0.id=1 AND t0.name=myName';
         $expected = new Request([
@@ -133,13 +129,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function selectBy() {
         $query    = 'SELECT name FROM products t0 WHERE t0.name=myName';
         $expected = new Request([
@@ -153,13 +144,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function selectAll() {
         $query    = 'SELECT name FROM products';
         $expected = new Request([
@@ -172,13 +158,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function selectJoined() {
         $query    = 'SELECT p.name FROM products p JOIN product.categories c ON c.id = p.categories_id';
         $expected = new Request([
@@ -191,13 +172,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function insert() {
         $query    = 'INSERT INTO products (name) VALUES ("myName")';
         $expected = new Request([
@@ -211,13 +187,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function update() {
         $query    = 'UPDATE products SET name="myValue" WHERE id=1';
         $expected = new Request([
@@ -231,13 +202,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function updateAll() {
         $query    = 'UPDATE products SET name="myValue"';
         $expected = new Request([
@@ -251,13 +217,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function updatePatch() {
         $query    = 'UPDATE products SET name="myValue" WHERE id=1';
         $expected = new Request([
@@ -277,13 +238,8 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest($optionsOverride)->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     */
+    #[Test]
+    #[Group('unit')]
     public function delete() {
         $query    = 'DELETE FROM products WHERE id=1';
         $expected = new Request([
@@ -296,17 +252,11 @@ class MysqlToRequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $this->createMysqlToRequest()->transform($query));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transform
-     * @covers ::<private>
-     * @expectedException \Exception
-     */
+    #[Test]
+    #[Group('unit')]
     public function brokenQuery() {
         $query = 'SHIT products WHERE dirt=1';
-
+        $this->expectException(\Exception::class);
         $this->createMysqlToRequest()->transform($query);
     }
 }

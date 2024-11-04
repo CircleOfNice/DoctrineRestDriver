@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\HashMapEntry;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the hash map entry type
@@ -26,17 +30,18 @@ use Circle\DoctrineRestDriver\Types\HashMapEntry;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\HashMapEntry
  */
+#[CoversClass(HashMapEntry::class)]
+#[CoversMethod(HashMapEntry::class, 'assert')]
+#[CoversMethod(HashMapEntry::class, 'assertExists')]
 class HashMapEntryTest extends \PHPUnit\Framework\TestCase {
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assert
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assert() {
         $hashMap = [
             'test' => 'test'
@@ -45,12 +50,11 @@ class HashMapEntryTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::assertExists
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function assertExists() {
         $hashMap = [
             'test' => 'test'

@@ -20,6 +20,10 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\Request;
 use Circle\DoctrineRestDriver\Types\RestClientOptions;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the request type
@@ -27,23 +31,22 @@ use Circle\DoctrineRestDriver\Types\RestClientOptions;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\Request
  */
+#[CoversClass(Request::class)]
+#[CoversMethod(Request::class,'__construct')]
+#[CoversMethod(Request::class,'getMethod')]
+#[CoversMethod(Request::class,'getUrl')]
+#[CoversMethod(Request::class,'getUrlAndQuery')]
+#[CoversMethod(Request::class,'getPayload')]
+#[CoversMethod(Request::class,'getQuery')]
+#[CoversMethod(Request::class,'getCurlOptions')]
+#[CoversMethod(Request::class,'isExpectedStatusCode')]
+#[CoversMethod(Request::class,'__toString')]
+#[CoversMethod(Request::class,'setCurlOptions')]
 class RequestTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getMethod
-     * @covers ::getUrl
-     * @covers ::getUrlAndQuery
-     * @covers ::getPayload
-     * @covers ::getQuery
-     * @covers ::getCurlOptions
-     * @covers ::isExpectedStatusCode
-     * @covers ::__toString
-     */
+    #[Test]
+    #[Group('unit')]
     public function constructAndGetAll() {
         $options = [];
 
@@ -64,12 +67,8 @@ class RequestTest extends \PHPUnit\Framework\TestCase {
         $this->assertTrue($request->isExpectedStatusCode(200));
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::setCurlOptions
-     */
+    #[Test]
+    #[Group('unit')]
     public function setCurlOptions() {
         $options = [
             'CURLOPT_HEADER' => true

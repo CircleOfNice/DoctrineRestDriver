@@ -20,14 +20,20 @@ namespace Circle\DoctrineRestDriver\Tests\Types;
 
 use Circle\DoctrineRestDriver\Types\HttpHeader;
 use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+
 /**
  * Tests the http header
  *
  * @author    Djane Rey Mabelin <thedjaney@gmail.com>
  * @copyright 2016
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Types\HttpHeader
  */
+#[CoversClass(HttpHeader::class)]
+#[CoversMethod(HttpHeader::class,'create')]
 class HttpHeaderTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -38,7 +44,7 @@ class HttpHeaderTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->options = [
             'security_strategy'  => 'none',
             'CURLOPT_MAXREDIRS'  => 22,
@@ -47,37 +53,35 @@ class HttpHeaderTest extends \PHPUnit\Framework\TestCase {
     }
 
     /**
-     * @test
-     * @group  unit
-     * @covers ::create
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function create() {
         $query  = 'SELECT name FROM products WHERE id=1';
         $parser = new PHPSQLParser();
         $token  = $parser->parse($query);
         $header = HttpHeader::create($this->options, $token);
-        
+
         $expectedHeader = [
             'CURLOPT_HTTPHEADER' => ['Content-Type: text/plain']
         ];
         $this->assertEquals($expectedHeader, $header);
     }
-    
+
     /**
-     * @test
-     * @group unit
-     * @covers ::create
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithPaginationIsDefault() {
         $query  = 'SELECT name FROM products LIMIT 5 OFFSET 2';
         $parser = new PHPSQLParser();
         $token  = $parser->parse($query);
         $header = HttpHeader::create($this->options, $token);
-        
+
         $expectedHeader = [
             'CURLOPT_HTTPHEADER' => [
                 'Content-Type: text/plain',
@@ -87,21 +91,20 @@ class HttpHeaderTest extends \PHPUnit\Framework\TestCase {
         ];
         $this->assertEquals($expectedHeader, $header);
     }
-    
+
     /**
-     * @test
-     * @group unit
-     * @covers ::create
-     * 
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Test]
+    #[Group('unit')]
     public function createWithoutPagination() {
         $query  = 'SELECT name FROM products LIMIT 5 OFFSET 2';
         $parser = new PHPSQLParser();
         $token  = $parser->parse($query);
         $this->options['pagination_as_query'] = true;
         $header = HttpHeader::create($this->options, $token);
-        
+
         $expectedHeader = [
             'CURLOPT_HTTPHEADER' => ['Content-Type: text/plain'],
         ];

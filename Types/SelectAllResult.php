@@ -38,11 +38,12 @@ class SelectAllResult {
      */
     public static function create(array $tokens, array $content) {
         $content = self::orderBy($tokens, $content);
-
-        return array_map(function($entry) use ($tokens) {
+        $content = array_map(function($entry) use ($tokens) {
             $row = SelectSingleResult::create($tokens, $entry);
             return array_pop($row);
         }, $content);
+
+        return $content ;
     }
 
     /**

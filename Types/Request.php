@@ -71,6 +71,11 @@ class Request {
         foreach($options as $key => $value) $this->$key = $value;
     }
 
+    public function setQuery($query)
+    {
+        $this->query = $query ;
+    }
+
     /**
      * sets the curl options
      *

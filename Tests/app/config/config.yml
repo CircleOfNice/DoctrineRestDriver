@@ -29,6 +29,10 @@ framework:
     http_method_override: true
     assets: ~
 
+sensio_framework_extra:
+    router:
+        annotations: false
+
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -58,7 +62,7 @@ doctrine:
                 mappings:
                     testing:
                         mapping: true
-                        type:    "annotation"
+                        type:    "attribute"
                         dir:     "%kernel.root_dir%/../Entity"
                         prefix:  "Circle\\DoctrineRestDriver\\Tests\\Entity"
                         alias:   "CircleDoctrineRestDriver"

@@ -36,12 +36,12 @@ class Identifier {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public static function create(array $tokens) {
+    public static function create(array $tokens,$idName = null) {
         HashMap::assert($tokens, 'tokens');
 
         if (empty($tokens['WHERE'])) return '';
 
-        $idAlias = self::alias($tokens);
+        $idAlias = self::alias($tokens,$idName);
 
         return array_reduce($tokens['WHERE'], function($carry, $token) use ($tokens, $idAlias) {
             if ($carry !== null) return (string)Value::create($carry);
@@ -58,8 +58,11 @@ class Identifier {
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public static function alias(array $tokens) {
+    public static function alias(array $tokens,$idName = null) {
         $column     = self::column($tokens, new MetaData());
+        if ($idName)
+            $column = $idName ;
+
         $tableAlias = Table::alias($tokens);
 
         return empty($tableAlias) ? $column : $tableAlias . '.' . $column;

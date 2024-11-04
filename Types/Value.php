@@ -41,6 +41,9 @@ class Value {
     public static function create($value) {
         Str::assert($value, 'value');
 
+        if (is_string($value))
+            $value = stripslashes($value);
+
         if($value === 'true')  return true;
         if($value === 'false') return false;
         if($value === 'null')  return null;

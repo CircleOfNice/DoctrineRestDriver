@@ -21,6 +21,10 @@ namespace Circle\DoctrineRestDriver\Tests\Security;
 use Circle\DoctrineRestDriver\Enums\HttpMethods;
 use Circle\DoctrineRestDriver\Security\HttpAuthentication;
 use Circle\DoctrineRestDriver\Types\Request;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the result mapping
@@ -28,8 +32,10 @@ use Circle\DoctrineRestDriver\Types\Request;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Security\HttpAuthentication
  */
+#[CoversClass(HttpAuthentication::class)]
+#[CoversMethod(HttpAuthentication::class,'__construct')]
+#[CoversMethod(HttpAuthentication::class,'transformRequest')]
 class HttpAuthenticationTest extends \PHPUnit\Framework\TestCase {
 
     /**
@@ -40,7 +46,7 @@ class HttpAuthenticationTest extends \PHPUnit\Framework\TestCase {
     /**
      * {@inheritdoc}
      */
-    public function setUp() {
+    public function setUp() : void {
         $this->authentication = new HttpAuthentication([
             'host'          => 'http://circle.ai',
             'user'          => 'Aladdin',
@@ -49,12 +55,8 @@ class HttpAuthenticationTest extends \PHPUnit\Framework\TestCase {
         ]);
     }
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::transformRequest
-     */
+    #[Test]
+    #[Group('unit')]
     public function transformRequest() {
         $expectedOptions = [
             CURLOPT_HTTPHEADER => [

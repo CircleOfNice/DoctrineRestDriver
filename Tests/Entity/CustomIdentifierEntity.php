@@ -29,17 +29,17 @@ use Circle\DoctrineRestDriver\Annotations as DataSource;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @ORM\Entity
- * @ORM\Table(name="other_products")
  * @SuppressWarnings("PHPMD")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "other_products")]
 class CustomIdentifierEntity {
     /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
+    #[ORM\Column(type: "integer")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
     protected $extremelyStrange_identifier;
 
     /**

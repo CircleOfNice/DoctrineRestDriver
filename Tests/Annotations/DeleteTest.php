@@ -19,6 +19,10 @@
 namespace Circle\DoctrineRestDriver\Tests\Annotations;
 
 use Circle\DoctrineRestDriver\Annotations\Delete;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests the delete annotation
@@ -26,19 +30,12 @@ use Circle\DoctrineRestDriver\Annotations\Delete;
  * @author    Tobias Hauck <tobias@circle.ai>
  * @copyright 2015 TeeAge-Beatz UG
  *
- * @coversDefaultClass Circle\DoctrineRestDriver\Annotations\Delete
  */
+#[CoversClass(Delete::class)]
+#[Group('unit')]
 class DeleteTest extends \PHPUnit\Framework\TestCase {
 
-    /**
-     * @test
-     * @group  unit
-     * @covers ::__construct
-     * @covers ::getRoute
-     * @covers ::getStatusCodes
-     * @covers ::getMethod
-     * @covers ::getOptions
-     */
+    #[Test]
     public function getRoute() {
         $delete = new Delete([
             'value'      => 'http://www.mySite.com/delete',
